@@ -1,0 +1,23 @@
+{
+  "default": {
+    "searchDefault": "Cliqz",
+    "searchOrder": [
+      "Cliqz",
+      "DuckDuckGo",
+      "Bing"
+    ],
+    "visibleDefaultEngines": [
+      "q",
+      "google-b-m",
+      "bing",
+      "amazondotcom",
+      "ddg",
+      "twitter",
+      "wikipedia"
+    ]
+  },
+  "regionOverrides": {
+  },
+  "locales": {
+  }
+}
