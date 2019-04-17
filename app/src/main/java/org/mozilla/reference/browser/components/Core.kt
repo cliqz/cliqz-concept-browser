@@ -26,7 +26,8 @@ import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_priva
 import java.util.concurrent.TimeUnit
 import org.mozilla.reference.browser.BuildConfig
 
-val addonId = BuildConfig.PRIVACY_ADDON_ID
+const val addonId = BuildConfig.PRIVACY_ADDON_ID
+const val reconsentId = "gdprtool@cliqz.com"
 
 /**
  * Component group for all core browser functionality.
@@ -48,6 +49,7 @@ class Core(private val context: Context) {
         )
         val engine = EngineProvider.createEngine(context, defaultSettings)
         engine.installWebExtension(WebExtension(addonId, "resource://android/assets/addons/$addonId/"))
+        engine.installWebExtension(WebExtension(reconsentId, "resource://android/assets/addons/$reconsentId/"))
         engine
     }
 

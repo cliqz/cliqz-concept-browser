@@ -2,10 +2,19 @@ def addonsPath = 'src/main/assets/addons'
 def privacyAddonUrl = 'https://s3.amazonaws.com/cdncliqz/update/edge/cliqz_privacy/simple-privacy/12.37.0.db96e91.zip'
 def privacyAddonId = 'privacy@cliqz.com'
 def privacyAddonPath = "${addonsPath}/${privacyAddonId}"
+def consentAddonUrl = 'https://s3.amazonaws.com/cdncliqz/update/browser_pre/gdprtool@cliqz.com/gdprtool@cliqz.com-1.0.12-browser-signed.xpi'
+def consentAddonId = 'gdprtool@cliqz.com'
+def consentAddonPath = "${addonsPath}/${consentAddonId}"
 
 task downloadPrivacyAddon(type: Download) {
     src privacyAddonUrl
     dest new File(downloadTaskDir, "${privacyAddonId}.zip")
+    onlyIfModified true
+}
+
+task downloadConsentAddon(type: Download) {
+    src consentAddonUrl
+    dest new File(downloadTaskDir, "${consentAddonId}.zip")
     onlyIfModified true
 }
 
@@ -17,6 +26,11 @@ task deleteOldAddons(type: Delete) {
 task updatePrivacyAddons(dependsOn: [deleteOldAddons, downloadPrivacyAddon], type: Copy) {
     from zipTree(downloadPrivacyAddon.dest)
     into privacyAddonPath
+}
+
+task updateConsentAddon(dependsOn: [deleteOldAddons, downloadConsentAddon], type: Copy) {
+    from zipTree(downloadConsentAddon.dest)
+    into consentAddonPath
 }
 
 android {
@@ -31,3 +45,4 @@ android {
 }
 
 preBuild.dependsOn(updatePrivacyAddons)
+preBuild.dependsOn(updateConsentAddon)
