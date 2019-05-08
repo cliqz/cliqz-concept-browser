@@ -1,0 +1,21 @@
+{
+  "name": "cliqzSearch",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "react-native start --reset-cache",
+    "build": "react-native bundle --platform android --entry-file index.js --dev=true  --reset-cache --bundle-output build/index.android.bundle"
+  },
+  "devDependencies": {
+    "react-native-fs": "^2.13.3"
+  },
+  "dependencies": {
+    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/v3.36/1.36.0.09794d6.tgz",
+    "cliqz-logo-database": "^0.1.2",
+    "moment": "^2.24.0",
+    "react": "^16.6.3",
+    "react-native": "^0.59.1",
+    "react-native-gesture-handler": "^1.0.12",
+    "react-native-snap-carousel": "^3.7.5",
+    "react-native-view-shot": "^2.2.0"
+  }
+}

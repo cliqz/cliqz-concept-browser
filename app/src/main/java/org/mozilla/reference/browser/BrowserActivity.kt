@@ -66,6 +66,11 @@ open class BrowserActivity : AppCompatActivity() {
         removeSessionIfNeeded()
     }
 
+    override fun onResume() {
+        super.onResume()
+        components.cliqzSearch.onResume(this)
+    }
+
     /**
      * If needed remove the current session.
      *

@@ -1,0 +1,10 @@
+dependencies {
+    implementation 'com.facebook.react:react-native:+'
+}
+
+task copyCliqzSearchReactNativeBundle(type: Copy) {
+    from '../cliqzSearch/build/index.android.bundle'
+    into './src/main/assets/cliqzSearch/'
+}
+
+preBuild.dependsOn(copyCliqzSearchReactNativeBundle)

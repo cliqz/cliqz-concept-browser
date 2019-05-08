@@ -54,5 +54,9 @@ jacoco.exec
 # Sentry token file
 .sentry_token
 
+
+# Cliqz Search asssets
+app/src/main/assets/cliqzSearch
 # Addons
 app/src/main/assets/addons
+

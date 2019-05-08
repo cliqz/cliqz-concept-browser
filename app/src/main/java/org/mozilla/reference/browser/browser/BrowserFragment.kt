@@ -285,4 +285,9 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         promptsFeature.withFeature { it.onActivityResult(requestCode, resultCode, data) }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        awesomeBar?.onDestroy()
+    }
 }

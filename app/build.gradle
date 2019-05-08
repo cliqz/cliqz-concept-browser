@@ -282,5 +282,7 @@ task printGeckoviewVersions {
 apply from: 'https://github.com/mozilla-mobile/android-components/raw/master/components/service/glean/scripts/sdk_generator.gradle'
 
 /* Cliqz start */
+apply from: '../cliqzSearch/cliqzSearch.gradle'
 apply from: './cliqz.gradle'
 /* Cliqz stop */
+
