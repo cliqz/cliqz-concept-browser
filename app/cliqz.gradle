@@ -1,0 +1,33 @@
+def addonsPath = 'src/main/assets/addons'
+def privacyAddonUrl = 'https://s3.amazonaws.com/cdncliqz/update/edge/cliqz_privacy/simple-privacy/12.37.0.db96e91.zip'
+def privacyAddonId = 'privacy@cliqz.com'
+def privacyAddonPath = "${addonsPath}/${privacyAddonId}"
+
+task downloadPrivacyAddon(type: Download) {
+    src privacyAddonUrl
+    dest new File(downloadTaskDir, "${privacyAddonId}.zip")
+    onlyIfModified true
+}
+
+task deleteOldAddons(type: Delete) {
+    delete addonsPath
+    followSymlinks = true
+}
+
+task updatePrivacyAddons(dependsOn: [deleteOldAddons, downloadPrivacyAddon], type: Copy) {
+    from zipTree(downloadPrivacyAddon.dest)
+    into privacyAddonPath
+}
+
+android {
+    defaultConfig {
+        buildConfigField('String', 'PRIVACY_ADDON_ID', "\"${privacyAddonId}\"")
+    }
+    aaptOptions{
+        // default ignoreAssetsPattern list includes all files and folders starting with _
+        // that breaks webextensions i18n as traslation are located in _locales folder
+        ignoreAssetsPattern  '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+    }
+}
+
+preBuild.dependsOn(updatePrivacyAddons)

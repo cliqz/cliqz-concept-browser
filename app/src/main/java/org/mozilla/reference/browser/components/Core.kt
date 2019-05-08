@@ -13,6 +13,7 @@ import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
+import mozilla.components.concept.engine.webextension.WebExtension
 import mozilla.components.concept.fetch.Client
 import mozilla.components.feature.session.HistoryDelegate
 import org.mozilla.reference.browser.AppRequestInterceptor
@@ -23,6 +24,9 @@ import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
 import java.util.concurrent.TimeUnit
+import org.mozilla.reference.browser.BuildConfig
+
+val addonId = BuildConfig.PRIVACY_ADDON_ID
 
 /**
  * Component group for all core browser functionality.
@@ -42,7 +46,9 @@ class Core(private val context: Context) {
             trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
             historyTrackingDelegate = HistoryDelegate(historyStorage)
         )
-        EngineProvider.createEngine(context, defaultSettings)
+        val engine = EngineProvider.createEngine(context, defaultSettings)
+        engine.installWebExtension(WebExtension(addonId, "resource://android/assets/addons/$addonId/"))
+        engine
     }
 
     /**

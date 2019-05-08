@@ -6,6 +6,12 @@ plugins {
     id "com.jetbrains.python.envs" version "0.0.26"
 }
 
+/* Cliqz start */
+plugins {
+    id "de.undercouch.download" version "3.4.3"
+}
+/* Cliqz stop */
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -274,3 +280,7 @@ task printGeckoviewVersions {
 // Normally this should use the same version as the dependency. But since we are using snapshots we can't reference a
 // git tag. So we are just using "master" and hoping for the best.
 apply from: 'https://github.com/mozilla-mobile/android-components/raw/master/components/service/glean/scripts/sdk_generator.gradle'
+
+/* Cliqz start */
+apply from: './cliqz.gradle'
+/* Cliqz stop */
