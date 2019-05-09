@@ -1,0 +1,32 @@
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    cd cliqzSearch
+    npm ci
+    mkdir -p build
+    npm run build
+  displayName: 'Build search'
+
+- task: Gradle@2
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    tasks: 'assembleDebug'
+  displayName: 'Build app'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: 'app/build/outputs/apk/'
+    artifactName: apks
+  displayName: 'Publish APKs'
