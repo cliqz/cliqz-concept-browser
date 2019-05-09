@@ -15,14 +15,14 @@ steps:
     cd cliqzSearch
     npm ci
     mkdir -p build
-    npm run build
+    npm run build:prod
   displayName: 'Build search'
 
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
-    tasks: 'assembleDebug'
+    tasks: 'assemble'
   displayName: 'Build app'
 
 - task: PublishBuildArtifacts@1
