@@ -1,5 +1,5 @@
 def addonsPath = 'src/main/assets/addons'
-def privacyAddonUrl = 'https://s3.amazonaws.com/cdncliqz/update/edge/cliqz_privacy/simple-privacy/12.37.0.db96e91.zip'
+def privacyAddonUrl = 'https://s3.amazonaws.com/cdncliqz/update/edge/cliqz_privacy/master/latest.zip'
 def privacyAddonId = 'privacy@cliqz.com'
 def privacyAddonPath = "${addonsPath}/${privacyAddonId}"
 def consentAddonUrl = 'https://s3.amazonaws.com/cdncliqz/update/browser_pre/gdprtool@cliqz.com/gdprtool@cliqz.com-1.0.12-browser-signed.xpi'
