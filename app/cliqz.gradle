@@ -45,4 +45,4 @@ android {
 }
 
 preBuild.dependsOn(updatePrivacyAddons)
-preBuild.dependsOn(updateConsentAddon)
+// preBuild.dependsOn(updateConsentAddon)
