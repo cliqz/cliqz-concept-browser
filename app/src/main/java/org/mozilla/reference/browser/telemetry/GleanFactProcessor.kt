@@ -8,7 +8,7 @@ import mozilla.components.support.base.Component
 import mozilla.components.support.base.facts.Action
 import mozilla.components.support.base.facts.Fact
 import mozilla.components.support.base.facts.FactProcessor
-import org.mozilla.reference.browser.GleanMetrics.ToolbarEvents
+import com.cliqz.reference.browser.GleanMetrics.ToolbarEvents
 
 class GleanFactProcessor : FactProcessor {
     /**

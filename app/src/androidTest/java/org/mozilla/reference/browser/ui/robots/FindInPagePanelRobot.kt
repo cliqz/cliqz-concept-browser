@@ -13,7 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.UiDevice
 import org.mozilla.reference.browser.helpers.click
-import org.mozilla.reference.browser.R
+import com.cliqz.reference.browser.R
 
 /**
  * Implementation of Robot Pattern for the FindInPage Panel.

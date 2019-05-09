@@ -13,7 +13,7 @@ import mozilla.components.feature.qr.QrFeature
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_CAMERA_PERMISSIONS
-import org.mozilla.reference.browser.R
+import com.cliqz.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 
 class PairSettingsFragment : Fragment(), BackHandler {

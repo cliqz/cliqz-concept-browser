@@ -10,7 +10,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import android.util.AttributeSet
 import android.widget.TextView
-import org.mozilla.reference.browser.R
+import com.cliqz.reference.browser.R
 
 /**
  * This preference is used to define custom  colors for both title and summary texts.

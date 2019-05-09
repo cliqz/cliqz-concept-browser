@@ -15,11 +15,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.concept.sync.SyncStatusObserver
 import mozilla.components.feature.sync.getLastSynced
-import org.mozilla.reference.browser.R
+import com.cliqz.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
-import org.mozilla.reference.browser.R.string.pref_key_sign_out
-import org.mozilla.reference.browser.R.string.pref_key_sync_now
+import com.cliqz.reference.browser.R.string.pref_key_sign_out
+import com.cliqz.reference.browser.R.string.pref_key_sync_now
 import java.lang.Exception
 
 class AccountSettingsFragment : PreferenceFragmentCompat() {

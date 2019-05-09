@@ -6,6 +6,7 @@ package org.mozilla.reference.browser
 
 import android.app.Application
 import android.content.Context
+import com.cliqz.reference.browser.BuildConfig
 import mozilla.components.concept.fetch.Client
 import mozilla.components.service.glean.Glean
 import mozilla.components.service.glean.config.Configuration

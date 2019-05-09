@@ -7,14 +7,14 @@ package org.mozilla.reference.browser.components
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import com.cliqz.reference.browser.BuildConfig
 import mozilla.components.lib.crash.CrashReporter
 import mozilla.components.lib.crash.service.MozillaSocorroService
 import mozilla.components.lib.crash.service.SentryService
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
 import org.mozilla.reference.browser.BrowserApplication
-import org.mozilla.reference.browser.BuildConfig
-import org.mozilla.reference.browser.R
+import com.cliqz.reference.browser.R
 
 /**
  * Component group for all functionality related to analytics e.g. crash

@@ -10,7 +10,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import org.mozilla.reference.browser.R
+import com.cliqz.reference.browser.R
 import org.mozilla.reference.browser.helpers.click
 
 /**
