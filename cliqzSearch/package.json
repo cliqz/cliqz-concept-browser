@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "start": "react-native start --reset-cache",
-    "build": "react-native bundle --platform android --entry-file index.js --dev=true  --reset-cache --bundle-output build/index.android.bundle"
+    "build": "react-native bundle --platform android --entry-file index.js --dev=true --bundle-output build/index.android.bundle",
+    "build:prod": "react-native bundle --platform android --entry-file index.js --dev=false --bundle-output build/index.android.bundle"
   },
   "devDependencies": {
     "react-native-fs": "^2.13.3"
