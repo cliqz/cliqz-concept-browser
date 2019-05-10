@@ -18,7 +18,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import mozilla.components.support.base.android.Padding
 import mozilla.components.support.ktx.android.view.setPadding
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 
 /**
  * Based off the internal version of com.google.android.material.internal.CheckableImageButton

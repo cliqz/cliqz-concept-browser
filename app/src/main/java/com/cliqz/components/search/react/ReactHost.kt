@@ -6,7 +6,7 @@ import com.facebook.react.shell.MainReactPackage
 import com.facebook.react.ReactInstanceManager
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
-import com.cliqz.reference.browser.BuildConfig
+import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.ext.application
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule

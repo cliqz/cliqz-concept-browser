@@ -16,7 +16,7 @@ import mozilla.components.support.base.log.Log.Priority.WARN
 import mozilla.components.support.base.log.Log
 import org.mozilla.reference.browser.BrowserApplication
 import org.mozilla.reference.browser.Components
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 
 /**
  * Get the BrowserApplication object from a context.

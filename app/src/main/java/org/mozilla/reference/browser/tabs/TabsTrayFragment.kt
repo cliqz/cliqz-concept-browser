@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_tabstray.tabsPanel
 import kotlinx.android.synthetic.main.fragment_tabstray.tabsTray
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import mozilla.components.support.base.feature.BackHandler
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.ext.requireComponents
 

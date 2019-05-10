@@ -7,7 +7,6 @@ package org.mozilla.reference.browser.components
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.cliqz.reference.browser.BuildConfig
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.session.storage.SessionStorage
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
@@ -19,13 +18,15 @@ import mozilla.components.feature.session.HistoryDelegate
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.EngineProvider
 import org.mozilla.reference.browser.ext.getPreferenceKey
-import com.cliqz.reference.browser.R
-import com.cliqz.reference.browser.R.string.pref_key_remote_debugging
-import com.cliqz.reference.browser.R.string.pref_key_tracking_protection_normal
-import com.cliqz.reference.browser.R.string.pref_key_tracking_protection_private
+import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
+import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
+import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
 import java.util.concurrent.TimeUnit
+import org.mozilla.reference.browser.BuildConfig
 
 const val addonId = BuildConfig.PRIVACY_ADDON_ID
+const val reconsentId = "gdprtool@cliqz.com"
 
 /**
  * Component group for all core browser functionality.

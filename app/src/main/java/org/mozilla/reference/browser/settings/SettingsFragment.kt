@@ -13,15 +13,15 @@ import androidx.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import mozilla.components.browser.session.Session
-import com.cliqz.reference.browser.R
-import com.cliqz.reference.browser.R.string.pref_key_firefox_account
+import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.R.string.pref_key_firefox_account
 import org.mozilla.reference.browser.ext.getPreferenceKey
-import com.cliqz.reference.browser.R.string.pref_key_sign_in
-import com.cliqz.reference.browser.R.string.pref_key_pair_sign_in
-import com.cliqz.reference.browser.R.string.pref_key_make_default_browser
-import com.cliqz.reference.browser.R.string.pref_key_remote_debugging
-import com.cliqz.reference.browser.R.string.pref_key_about_page
-import com.cliqz.reference.browser.R.string.pref_key_privacy
+import org.mozilla.reference.browser.R.string.pref_key_sign_in
+import org.mozilla.reference.browser.R.string.pref_key_pair_sign_in
+import org.mozilla.reference.browser.R.string.pref_key_make_default_browser
+import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
+import org.mozilla.reference.browser.R.string.pref_key_about_page
+import org.mozilla.reference.browser.R.string.pref_key_privacy
 import org.mozilla.reference.browser.ext.requireComponents
 
 @Suppress("TooManyFunctions")

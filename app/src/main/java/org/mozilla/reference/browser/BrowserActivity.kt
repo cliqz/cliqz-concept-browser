@@ -11,7 +11,6 @@ import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.View
-import com.cliqz.reference.browser.R
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.tabstray.BrowserTabsTray
 import mozilla.components.concept.engine.EngineView

@@ -16,7 +16,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import mozilla.components.ui.colors.R.color.photonPurple50
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.view.ToggleImageButton
 

@@ -15,7 +15,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.uiautomator.UiDevice
 import org.mozilla.reference.browser.helpers.click
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 
 class ThreeDotMenuRobot {
 

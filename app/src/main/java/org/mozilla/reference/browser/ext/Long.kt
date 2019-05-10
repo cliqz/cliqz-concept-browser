@@ -6,7 +6,7 @@ package org.mozilla.reference.browser.ext
 
 import android.content.Context
 import android.text.format.DateUtils
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 import java.util.Date
 import java.util.Calendar
 import java.util.GregorianCalendar

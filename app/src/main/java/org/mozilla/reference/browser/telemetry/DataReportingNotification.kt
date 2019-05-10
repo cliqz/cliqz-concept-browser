@@ -16,7 +16,7 @@ import android.os.Build
 import android.preference.PreferenceManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 
 /**
  * Data Reporting notification to be shown on the first app start and whenever the data policy version changes.

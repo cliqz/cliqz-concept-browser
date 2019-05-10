@@ -4,7 +4,7 @@
 
 package org.mozilla.reference.browser.ext
 
-import com.cliqz.reference.browser.BuildConfig
+import org.mozilla.reference.browser.BuildConfig
 
 val isCrashReportActive: Boolean
     get() = !BuildConfig.DEBUG && BuildConfig.CRASH_REPORTING_ENABLED

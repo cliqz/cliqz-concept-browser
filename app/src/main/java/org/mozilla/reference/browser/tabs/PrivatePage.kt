@@ -8,7 +8,7 @@ package org.mozilla.reference.browser.tabs
 
 import android.content.Context
 import androidx.annotation.RawRes
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 
 object PrivatePage {
     /**

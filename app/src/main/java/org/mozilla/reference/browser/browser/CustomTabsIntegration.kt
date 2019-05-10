@@ -15,7 +15,7 @@ import mozilla.components.feature.customtabs.CustomTabsToolbarFeature
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.LifecycleAwareFeature
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.share
 
 class CustomTabsIntegration(

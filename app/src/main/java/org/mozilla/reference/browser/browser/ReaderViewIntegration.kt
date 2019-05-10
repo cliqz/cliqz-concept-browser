@@ -20,7 +20,7 @@ import mozilla.components.feature.readerview.ReaderViewFeature
 import mozilla.components.feature.readerview.view.ReaderViewControlsView
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.LifecycleAwareFeature
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 
 class ReaderViewIntegration(
     context: Context,

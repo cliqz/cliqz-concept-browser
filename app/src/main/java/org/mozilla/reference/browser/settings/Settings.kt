@@ -6,7 +6,7 @@ package org.mozilla.reference.browser.settings
 
 import android.content.Context
 import android.preference.PreferenceManager
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 
 object Settings {
     fun isTelemetryEnabled(context: Context): Boolean =

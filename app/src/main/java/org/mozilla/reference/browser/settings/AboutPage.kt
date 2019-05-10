@@ -9,7 +9,7 @@ package org.mozilla.reference.browser.settings
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.annotation.RawRes
-import com.cliqz.reference.browser.R
+import org.mozilla.reference.browser.R
 import org.mozilla.geckoview.BuildConfig
 import org.mozilla.reference.browser.ext.replace
 
