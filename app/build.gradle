@@ -32,7 +32,7 @@ android {
     compileSdkVersion Config.compileSdkVersion
 
     defaultConfig {
-        applicationId "org.mozilla.reference.browser"
+        applicationId "com.cliqz.reference.browser"
         minSdkVersion Config.minSdkVersion
         targetSdkVersion Config.targetSdkVersion
         versionCode Config.versionCode
