@@ -1,3 +1,5 @@
+variables:
+  BUILD_OUTPUT_DIR: app/build/outputs/apk
 
 trigger:
 - master
@@ -15,18 +17,30 @@ steps:
     cd cliqzSearch
     npm ci
     mkdir -p build
-    npm run build:prod
-  displayName: 'Build search'
+    npm run build
+  displayName: 'Build search (debug)'
 
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
-    tasks: 'assemble'
-  displayName: 'Build app'
+    tasks: 'assembleDebug'
+  displayName: 'Assemble Debug'
+
+- script: |
+    cd cliqzSearch
+    npm run build:prod
+  displayName: 'Build search (release)'
+
+- task: Gradle@2
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    tasks: 'assembleRelease'
+  displayName: 'Assemble Release'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: 'app/build/outputs/apk/'
+    pathtoPublish: '$(BUILD_OUTPUT_DIR)/'
     artifactName: apks
   displayName: 'Publish APKs'
