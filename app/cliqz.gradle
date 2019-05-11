@@ -1,41 +1,34 @@
+
 def addonsPath = 'src/main/assets/addons'
-def privacyAddonUrl = 'https://s3.amazonaws.com/cdncliqz/update/edge/cliqz_privacy/master/12.37.0.129.1ffc8ce.zip'
-def privacyAddonId = 'privacy@cliqz.com'
-def privacyAddonPath = "${addonsPath}/${privacyAddonId}"
-def consentAddonUrl = 'https://s3.amazonaws.com/cdncliqz/update/browser_pre/gdprtool@cliqz.com/gdprtool@cliqz.com-1.0.12-browser-signed.xpi'
-def consentAddonId = 'gdprtool@cliqz.com'
-def consentAddonPath = "${addonsPath}/${consentAddonId}"
-
-task downloadPrivacyAddon(type: Download) {
-    src privacyAddonUrl
-    dest new File(downloadTaskDir, "${privacyAddonId}.zip")
-    onlyIfModified true
-}
-
-task downloadConsentAddon(type: Download) {
-    src consentAddonUrl
-    dest new File(downloadTaskDir, "${consentAddonId}.zip")
-    onlyIfModified true
-}
+def addons = [
+    'privacy@cliqz.com': 'https://s3.amazonaws.com/cdncliqz/update/edge/cliqz_privacy/master/12.37.0.129.1ffc8ce.zip',
+]
 
 task deleteOldAddons(type: Delete) {
     delete addonsPath
     followSymlinks = true
 }
 
-task updatePrivacyAddons(dependsOn: [deleteOldAddons, downloadPrivacyAddon], type: Copy) {
-    from zipTree(downloadPrivacyAddon.dest)
-    into privacyAddonPath
+def generateAddonTask(id, url, addonsPath) {
+    def downloadTask = task "downloadAddon$id"(type: Download) {
+        src url
+        dest new File(downloadTaskDir, "${id}.zip")
+    }
+    task "updateAddon$id"(dependsOn: ["downloadAddon$id"], type: Copy) {
+        from zipTree(downloadTask.dest)
+        into "${addonsPath}/${id}"
+    }
 }
 
-task updateConsentAddon(dependsOn: [deleteOldAddons, downloadConsentAddon], type: Copy) {
-    from zipTree(downloadConsentAddon.dest)
-    into consentAddonPath
+addons.each { id, url ->
+    generateAddonTask(id, url, addonsPath)
+    preBuild.dependsOn("updateAddon$id")
 }
+clean.dependsOn deleteOldAddons
 
 android {
     defaultConfig {
-        buildConfigField('String', 'PRIVACY_ADDON_ID', "\"${privacyAddonId}\"")
+        buildConfigField('String', 'ADDONS', "\"${addons.keySet().join(',')}\"")
     }
     aaptOptions{
         // default ignoreAssetsPattern list includes all files and folders starting with _
@@ -43,6 +36,3 @@ android {
         ignoreAssetsPattern  '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
     }
 }
-
-preBuild.dependsOn(updatePrivacyAddons)
-// preBuild.dependsOn(updateConsentAddon)
