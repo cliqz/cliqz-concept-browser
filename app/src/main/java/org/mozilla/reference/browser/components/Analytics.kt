@@ -40,7 +40,7 @@ class Analytics(private val context: Context) {
             shouldPrompt = CrashReporter.Prompt.ALWAYS,
             promptConfiguration = CrashReporter.PromptConfiguration(
                 appName = context.getString(R.string.app_name),
-                organizationName = "Mozilla"
+                organizationName = "Cliqz"
             ),
             nonFatalCrashIntent = PendingIntent
                 .getBroadcast(context, 0, Intent(BrowserApplication.NON_FATAL_CRASH_BROADCAST), 0),

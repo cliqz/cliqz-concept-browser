@@ -6,6 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--
     <PreferenceCategory
         android:title="@string/tracker_category">
 
@@ -20,6 +21,7 @@
             android:key="@string/pref_key_tracking_protection_private"/>
 
     </PreferenceCategory>
+    -->
 
     <PreferenceCategory
         android:title="@string/data_choices_category">
