@@ -3,7 +3,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <resources>
-    <string name="app_name">Cliqz Reference Browser</string>
+    <string name="app_name">Cliqz Concept Browser</string>
 
     <!-- Text shown in the toolbar if it is empty -->
     <string name="toolbar_hint">Search or enter address</string>
@@ -40,7 +40,7 @@
     <string name="preferences_tracking_protection_private">Enable in Private Browsing Mode</string>
 
     <!-- Preference about page -->
-    <string name="preferences_about_page">About Reference Browser</string>
+    <string name="preferences_about_page">About Cliqz Concept Browser</string>
 
     <!-- Preference for signing in -->
     <string name="sign_in">Sign in</string>
@@ -88,7 +88,7 @@
     <string name="use_telemetry">Use Telemetry</string>
 
     <!-- Preference category for Mozilla about/legal etc. -->
-    <string name="mozilla_category">Mozilla</string>
+    <string name="mozilla_category">Cliqz</string>
 
     <!-- Preference category for tracking protection -->
     <string name="tracker_category">Tracking Protection</string>
@@ -119,7 +119,7 @@
     <string name="private_browsing_title">Private Browsing</string>
     <string name="private_browsing_body"><![CDATA[
 <h1>Private Browsing</h1>
-<p>When you browse in a Private Window, Reference Browser <strong>does not save</strong>:</p>
+<p>When you browse in a Private Window, Cliqz Concept Browser <strong>does not save</strong>:</p>
 <ul class="two-column">
     <li>visited pages</li>
     <li>searches</li>
@@ -140,15 +140,7 @@
 
     <!-- About content -->
     <string name="about_content"><![CDATA[
-<p>%1$s puts you in control.</p>
-<p>Use it as a reference browser:
-  <ul>
-    <li>Learn how to build your own browser.</li>
-    <li>Contribute to making it easier to build browsers.</li>
-    <li>File bug reports!</li>
-  </ul>
-</p>
-<p>%1$s is produced by Mozilla. Our mission is to foster a healthy, open Internet.<br/>
+<p>%1$s showcases Cliqz search and privacy technologies!</p>
     ]]></string>
 
     <string name="menu_share_with">Share with…</string>

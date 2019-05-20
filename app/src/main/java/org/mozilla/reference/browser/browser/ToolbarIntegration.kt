@@ -90,7 +90,7 @@ class ToolbarIntegration(
 
             SimpleBrowserMenuItem("Report issue") {
                 tabsUseCases.addTab.invoke(
-                    "https://github.com/mozilla-mobile/reference-browser/issues/new")
+                    "https://github.com/cliqz/cliqz-concept-browser/issues")
             },
 
             SimpleBrowserMenuItem("Settings") {
