@@ -2,45 +2,80 @@ variables:
   BUILD_OUTPUT_DIR: app/build/outputs/apk
 
 trigger:
-- master
+  - master
 
-pool:
-  vmImage: 'ubuntu-latest'
+jobs:
+- job: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+  - script: |
+      cd cliqzSearch
+      npm ci
+      mkdir -p build
+      npm run build
+    displayName: 'Build search (debug)'
 
-- script: |
-    cd cliqzSearch
-    npm ci
-    mkdir -p build
-    npm run build
-  displayName: 'Build search (debug)'
+  - task: Gradle@2
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      tasks: 'assembleDebug'
+    displayName: 'Assemble Debug'
 
-- task: Gradle@2
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
-    tasks: 'assembleDebug'
-  displayName: 'Assemble Debug'
+  - script: |
+      cd cliqzSearch
+      npm run build:prod
+    displayName: 'Build search (release)'
 
-- script: |
-    cd cliqzSearch
-    npm run build:prod
-  displayName: 'Build search (release)'
+  - task: Gradle@2
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      tasks: 'assembleRelease'
+    displayName: 'Assemble Release'
 
-- task: Gradle@2
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
-    tasks: 'assembleRelease'
-  displayName: 'Assemble Release'
+  - task: CopyFiles@2
+    inputs:
+      contents: '$(BUILD_OUTPUT_DIR)/**/*.apk'
+      targetFolder: '$(build.artifactStagingDirectory)'
+    
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish APKs'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(BUILD_OUTPUT_DIR)/'
-    artifactName: apks
-  displayName: 'Publish APKs'
+- job: Test
+  pool:
+    vmImage: 'macOS 10.13'
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+  - script: |
+      cd cliqzSearch
+      npm ci
+      mkdir -p build
+      npm run build
+    displayName: 'Build search'
+  - script: |
+      echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+      echo $ANDROID_HOME/emulator/emulator -list-avds
+      echo "Starting emulator"
+      nohup $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -no-snapshot > /dev/null 2>&1 &
+      $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+      $ANDROID_HOME/platform-tools/adb devices
+      echo "Emulator started"
+    displayName: "Start Emulator"
+  - task: Gradle@2
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      publishJUnitResults: true
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'connectedGeckoNightlyX86DebugAndroidTest'
+    displayName: 'Test'
