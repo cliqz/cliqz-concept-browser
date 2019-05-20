@@ -36,7 +36,7 @@ steps:
   inputs:
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
-    tasks: 'assembleRelease'
+    tasks: 'assemble'
   displayName: 'Assemble Release'
 
 - task: PublishBuildArtifacts@1
