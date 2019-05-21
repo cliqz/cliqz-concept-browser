@@ -1,0 +1,4 @@
+
+prefs:
+  privacy.firstparty.isolate: true
+  network.cookie.cookieBehavior: 4

@@ -15,6 +15,7 @@ import mozilla.components.lib.crash.handler.CrashHandlerService
 import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoRuntimeSettings
 import org.mozilla.reference.browser.ext.isCrashReportActive
+import java.io.File
 
 object EngineProvider {
     var testConfig: Bundle? = null
@@ -24,7 +25,17 @@ object EngineProvider {
     @Synchronized
     private fun getOrCreateRuntime(context: Context): GeckoRuntime {
         if (runtime == null) {
+            // copy config to cache dir
+            val geckoViewConfigPath = "cliqz-geckoview-config.yaml"
+            val configAssets = context.assets.open(geckoViewConfigPath)
+            val configFile = File(context.cacheDir, geckoViewConfigPath)
+            configFile.createNewFile()
+            configAssets.copyTo(configFile.outputStream())
+            configAssets.close()
+
             val builder = GeckoRuntimeSettings.Builder()
+                    .configFilePath(configFile.absolutePath)
+                    .autoplayDefault(GeckoRuntimeSettings.AUTOPLAY_DEFAULT_BLOCKED)
 
             testConfig?.let { builder.extras(it) }
 
