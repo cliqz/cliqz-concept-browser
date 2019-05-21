@@ -43,6 +43,7 @@ jobs:
     inputs:
       gradleWrapperFile: 'gradlew'
       tasks: 'assemble'
+      options: '-PversionName=1.0.$(Build.BuildNumber)'
     displayName: 'Assemble Release'
 
   - task: CopyFiles@2
@@ -107,7 +108,7 @@ jobs:
       gradleWrapperFile: 'gradlew'
       publishJUnitResults: true
       testResultsFiles: '$(TESTS_XML_DIR)/**/TEST-*.xml'
-      tasks: 'connectedGeckoNightlyX86DebugAndroidTest'
+      tasks: 'connectedX86DebugAndroidTest'
     displayName: 'Run Tests'
 
   - bash: |
