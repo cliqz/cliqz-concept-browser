@@ -1,46 +1,129 @@
 variables:
   BUILD_OUTPUT_DIR: app/build/outputs/apk
+  TESTS_XML_DIR: app/build/outputs/androidTest-results
+  IMG_NAME: system-images;android-23;google_apis;x86
+  DEVICE_TYPE: "Nexus 4"
+  DEVICE_NAME: Nexus4Emu
+  DEV_VIDEO_DIR: /mnt/sdcard/DCIM
+  SEARCH_DIR: cliqzSearch
 
 trigger:
-- master
+  - master
 
-pool:
-  vmImage: 'ubuntu-latest'
+jobs:
+- job: Build
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+  pool:
+    vmImage: 'macOS 10.13'
 
-- script: |
-    cd cliqzSearch
-    npm ci
-    mkdir -p build
-    npm run build
-  displayName: 'Build search (debug)'
+  steps:
 
-- task: Gradle@2
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
-    tasks: 'assembleDebug'
-  displayName: 'Assemble Debug'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
 
-- script: |
-    cd cliqzSearch
-    npm run build:prod
-  displayName: 'Build search (release)'
+  - bash: |
+      npm ci
+      npm run build
+    workingDirectory: $(SEARCH_DIR)
+    displayName: 'Build search (debug)'
 
-- task: Gradle@2
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
-    tasks: 'assemble'
-  displayName: 'Assemble Release'
+  - task: Gradle@2
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      tasks: 'assembleDebug'
+    displayName: 'Assemble Debug'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(BUILD_OUTPUT_DIR)/'
-    artifactName: apks
-  displayName: 'Publish APKs'
+  - bash: npm run build:prod
+    workingDirectory: $(SEARCH_DIR)
+    displayName: 'Build search (release)'
+
+  - task: Gradle@2
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      tasks: 'assemble'
+    displayName: 'Assemble Release'
+
+  - task: CopyFiles@2
+    inputs:
+      contents: '$(BUILD_OUTPUT_DIR)/**/*.apk'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish'
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: '$(Build.BuildId).Build'
+      publishLocation: 'Container'
+
+- job: Test
+
+  pool:
+    vmImage: 'macOS 10.13'
+
+  steps:
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+
+  - bash: |
+      npm ci
+      npm run build
+    workingDirectory: $(SEARCH_DIR)
+    displayName: 'Build search'
+
+  - bash: |
+      $ANDROID_HOME/tools/bin/sdkmanager "$(IMG_NAME)"
+      $ANDROID_HOME/tools/bin/avdmanager create avd --device "$(DEVICE_TYPE)" --package "$(IMG_NAME)" --abi google_apis/x86 --name "$(DEVICE_NAME)"
+      $ANDROID_HOME/emulator/emulator -avd $(DEVICE_NAME) &
+      echo $! >> emu.pid
+      sleep 60
+      $ANDROID_HOME/platform-tools/adb devices
+    displayName: 'Setup and Launch Emulator'
+
+  - bash: |
+      $ANDROID_HOME/platform-tools/adb shell """
+      mount -o rw,remount rootfs /;
+      chmod 0777 /mnt/sdcard;
+      exit
+      """
+      $ANDROID_HOME/platform-tools/adb shell mkdir -p $(DEV_VIDEO_DIR)/
+      $ANDROID_HOME/platform-tools/adb shell '''
+        for i in $(seq 1 1 20)
+        do
+          screenrecord $(DEV_VIDEO_DIR)/test"${i}".mp4
+        done ''' &
+      echo $! > video.pid
+      $ANDROID_HOME/platform-tools/adb logcat -c
+      $ANDROID_HOME/platform-tools/adb logcat > $(Build.ArtifactStagingDirectory)/device.log &
+      echo $! > logcat.pid
+    displayName: 'Start Video Record and Logcat'
+
+  - task: Gradle@2
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      publishJUnitResults: true
+      testResultsFiles: '$(TESTS_XML_DIR)/**/TEST-*.xml'
+      tasks: 'connectedGeckoNightlyX86DebugAndroidTest'
+    displayName: 'Run Tests'
+
+  - bash: |
+      kill -9 $(cat video.pid) || true
+      sleep 10
+      $ANDROID_HOME/platform-tools/adb pull $(DEV_VIDEO_DIR)/ $(Build.ArtifactStagingDirectory)/ || true
+      kill -9 $(cat logcat.pid) || true
+      adb kill-server
+      kill -9 $(cat emu.pid)
+    condition: always()
+    displayName: 'Copy Videos and Clean Up'
+
+  - task: PublishBuildArtifacts@1
+    condition: always()
+    displayName: 'Publish'
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: '$(Build.BuildId).Test'
+      publishLocation: 'Container'
