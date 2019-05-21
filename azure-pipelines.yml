@@ -26,6 +26,11 @@ steps:
     gradleOptions: '-Xmx3072m'
     tasks: 'assembleDebug'
   displayName: 'Assemble Debug'
+  
+- script: |
+    echo "$(sentry_token)" > .sentry_token
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: 'Insert Sentry DSN'
 
 - script: |
     cd cliqzSearch
