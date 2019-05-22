@@ -8,13 +8,13 @@ variables:
   SEARCH_DIR: cliqzSearch
 
 jobs:
-- job: Build
-  
+- job: Build_Debug
+
   pool:
     vmImage: 'macOS 10.13'
-  
+
   steps:
-  
+
   - task: NodeTool@0
     inputs:
       versionSpec: '10.x'
@@ -32,18 +32,43 @@ jobs:
       tasks: 'assembleDebug'
     displayName: 'Assemble Debug'
 
-  - bash: npm run build:prod
+  - task: CopyFiles@2
+    inputs:
+      contents: '$(BUILD_OUTPUT_DIR)/**/*.apk'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+    
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish'
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: '$(Build.BuildId).DebugBuilds'
+      publishLocation: 'Container'
+
+- job: Build_Release
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+
+  pool:
+    vmImage: 'macOS 10.13'
+
+  steps:
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+
+  - bash: |
+      npm ci
+      npm run build:prod
     workingDirectory: $(SEARCH_DIR)
     displayName: 'Build search (release)'
 
   - task: DownloadSecureFile@1
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     inputs:
       secureFile: .sentry_token
     displayName: 'Download Sentry Token'
 
   - task: CopyFiles@2
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     inputs:
       sourceFolder: $(Agent.TempDirectory)
       contents: '.sentry_token'
@@ -65,7 +90,7 @@ jobs:
     displayName: 'Publish'
     inputs:
       pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      artifactName: '$(Build.BuildId).Build'
+      artifactName: '$(Build.BuildId).ReleaseBuilds'
       publishLocation: 'Container'
 
 - job: Test
@@ -93,6 +118,7 @@ jobs:
       echo $! > emu.pid
       echo "Emulator Started with Process ID: $(cat emu.pid)"
       $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+      sleep 60
       $ANDROID_HOME/platform-tools/adb devices
     displayName: 'Setup and Launch Emulator'
 
@@ -102,6 +128,7 @@ jobs:
       chmod 0777 /mnt/sdcard;
       exit
       """
+      sleep 10
       $ANDROID_HOME/platform-tools/adb logcat -c
       $ANDROID_HOME/platform-tools/adb logcat > $(Build.ArtifactStagingDirectory)/device.log &
       echo $! > logcat.pid
@@ -110,8 +137,9 @@ jobs:
       $ANDROID_HOME/platform-tools/adb shell '''
         for i in $(seq 1 1 20)
         do
-          screenrecord $(DEVICE_VIDEO_DIR)/test"${i}".mp4
-        done ''' &
+          screenrecord --bugreport --verbose --time-limit=180 /mnt/sdcard/DCIM/test"${i}".mp4
+        done
+      ''' > $(Build.ArtifactStagingDirectory)/video.log &
       echo $! > video.pid
       echo "Video Recorder Started with Process ID: $(cat video.pid)"
     displayName: 'Start Video Record and Logcat'
@@ -131,11 +159,11 @@ jobs:
       kill -9 $(cat logcat.pid) || true
       adb kill-server
       kill -9 $(cat emu.pid)
-    condition: always()
+    condition: or(succeeded(), failed())
     displayName: 'Copy Videos and Clean Up'
 
   - task: PublishBuildArtifacts@1
-    condition: always()
+    condition: or(succeeded(), failed())
     displayName: 'Publish'
     inputs:
       pathtoPublish: '$(Build.ArtifactStagingDirectory)'
