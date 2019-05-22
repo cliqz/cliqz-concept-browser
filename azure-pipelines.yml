@@ -36,6 +36,20 @@ jobs:
     workingDirectory: $(SEARCH_DIR)
     displayName: 'Build search (release)'
 
+  - task: DownloadSecureFile@1
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    inputs:
+      secureFile: .sentry_token
+    displayName: 'Download Sentry Token'
+
+  - task: CopyFiles@2
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    inputs:
+      sourceFolder: $(Agent.TempDirectory)
+      contents: '.sentry_token'
+      targetFolder: $(Build.SourcesDirectory)
+    displayName: 'Copy Sentry Token'
+
   - task: Gradle@2
     inputs:
       gradleWrapperFile: 'gradlew'
