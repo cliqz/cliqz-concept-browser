@@ -4,7 +4,7 @@ variables:
   IMG_NAME: system-images;android-23;google_apis;x86
   DEVICE_TYPE: "Nexus 4"
   DEVICE_NAME: Nexus4Emu
-  DEV_VIDEO_DIR: /mnt/sdcard/DCIM
+  DEVICE_VIDEO_DIR: /mnt/sdcard/DCIM
   SEARCH_DIR: cliqzSearch
 
 jobs:
@@ -90,8 +90,9 @@ jobs:
       $ANDROID_HOME/tools/bin/sdkmanager "$(IMG_NAME)"
       $ANDROID_HOME/tools/bin/avdmanager create avd --device "$(DEVICE_TYPE)" --package "$(IMG_NAME)" --abi google_apis/x86 --name "$(DEVICE_NAME)"
       $ANDROID_HOME/emulator/emulator -avd $(DEVICE_NAME) &
-      echo $! >> emu.pid
-      sleep 60
+      echo $! > emu.pid
+      echo "Emulator Started with Process ID: $(cat emu.pid)"
+      $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
       $ANDROID_HOME/platform-tools/adb devices
     displayName: 'Setup and Launch Emulator'
 
@@ -101,16 +102,18 @@ jobs:
       chmod 0777 /mnt/sdcard;
       exit
       """
-      $ANDROID_HOME/platform-tools/adb shell mkdir -p $(DEV_VIDEO_DIR)/
-      $ANDROID_HOME/platform-tools/adb shell '''
-        for i in $(seq 1 1 20)
-        do
-          screenrecord $(DEV_VIDEO_DIR)/test"${i}".mp4
-        done ''' &
-      echo $! > video.pid
       $ANDROID_HOME/platform-tools/adb logcat -c
       $ANDROID_HOME/platform-tools/adb logcat > $(Build.ArtifactStagingDirectory)/device.log &
       echo $! > logcat.pid
+      echo "Logcat Started with Process ID: $(cat logcat.pid)"
+      $ANDROID_HOME/platform-tools/adb shell "mkdir -p $(DEVICE_VIDEO_DIR)"
+      $ANDROID_HOME/platform-tools/adb shell '''
+        for i in $(seq 1 1 20)
+        do
+          screenrecord $(DEVICE_VIDEO_DIR)/test"${i}".mp4
+        done ''' &
+      echo $! > video.pid
+      echo "Video Recorder Started with Process ID: $(cat video.pid)"
     displayName: 'Start Video Record and Logcat'
 
   - task: Gradle@2
@@ -124,7 +127,7 @@ jobs:
   - bash: |
       kill -9 $(cat video.pid) || true
       sleep 10
-      $ANDROID_HOME/platform-tools/adb pull $(DEV_VIDEO_DIR)/ $(Build.ArtifactStagingDirectory)/ || true
+      $ANDROID_HOME/platform-tools/adb pull $(DEVICE_VIDEO_DIR)/ $(Build.ArtifactStagingDirectory)/ || true
       kill -9 $(cat logcat.pid) || true
       adb kill-server
       kill -9 $(cat emu.pid)
