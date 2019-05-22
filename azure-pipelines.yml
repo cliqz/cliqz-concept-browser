@@ -7,9 +7,6 @@ variables:
   DEV_VIDEO_DIR: /mnt/sdcard/DCIM
   SEARCH_DIR: cliqzSearch
 
-trigger:
-  - master
-
 jobs:
 - job: Build
   
