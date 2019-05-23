@@ -100,8 +100,8 @@ private fun makeDefaultBrowserButton() = Espresso.onView(ViewMatchers.withText("
 private fun developerToolsHeading() = Espresso.onView(ViewMatchers.withText("Developer tools"))
 private fun remoteDebuggingText() = Espresso.onView(ViewMatchers.withText("Remote debugging via USB"))
 private fun remoteDebuggingToggle() = Espresso.onView(ViewMatchers.withId(R.id.switchWidget))
-private fun mozillaHeading() = Espresso.onView(ViewMatchers.withText("Mozilla"))
-private fun aboutReferenceBrowserButton() = Espresso.onView(ViewMatchers.withText("About Reference Browser"))
+private fun mozillaHeading() = Espresso.onView(ViewMatchers.withText("Cliqz"))
+private fun aboutReferenceBrowserButton() = Espresso.onView(ViewMatchers.withText("About Cliqz Concept Browser"))
 
 private fun assertNavigateUpButton() = navigateUpButton()
         .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

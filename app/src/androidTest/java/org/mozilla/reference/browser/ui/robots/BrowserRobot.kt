@@ -30,17 +30,22 @@ class BrowserRobot {
         assertTrue(testContent.exists())
     }
 
-    fun verifyFXAUrl() {
+    fun verifyUrl(redirectUrl: String) {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        // if WIFI off
-        val redirectUrl = "https://github.com/login"
-        // if WIFI on
-        // val redirectUrl = "https://accounts.firefox.com"
 
         mDevice.wait(Until.findObject(By.res("mozac_browser_toolbar_url_view")), waitingTime)
         onView(withId(R.id.mozac_browser_toolbar_url_view))
                 .check(matches(withText(containsString(redirectUrl))))
     }
+
+    fun verifyFXAUrl() {
+        verifyUrl("https://accounts.firefox.com")
+    }
+
+    fun verifyIssueUrl() {
+        verifyUrl("https://github.com/cliqz/cliqz-concept-browser/issues")
+    }
+
     fun verifyAboutBrowser() {
         // Testing About Reference Browser crashes in Java String
         // https://github.com/mozilla-mobile/reference-browser/issues/680
