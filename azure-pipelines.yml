@@ -78,14 +78,15 @@ jobs:
   - task: Gradle@2
     inputs:
       gradleWrapperFile: 'gradlew'
-      tasks: 'assembleRelease'
+      tasks: 'assemble'
+      options: '-PversionName=1.0.$(Build.BuildNumber)'
     displayName: 'Assemble Release'
 
   - task: CopyFiles@2
     inputs:
       contents: '$(BUILD_OUTPUT_DIR)/**/*.apk'
       targetFolder: '$(Build.ArtifactStagingDirectory)'
-    
+
   - task: PublishBuildArtifacts@1
     displayName: 'Publish'
     inputs:
@@ -94,17 +95,17 @@ jobs:
       publishLocation: 'Container'
 
 - job: Test
-  
+
   pool:
     vmImage: 'macOS 10.13'
-  
+
   steps:
-  
+
   - task: NodeTool@0
     inputs:
       versionSpec: '10.x'
     displayName: 'Install Node.js'
-  
+
   - bash: |
       npm ci
       npm run build
@@ -149,7 +150,7 @@ jobs:
       gradleWrapperFile: 'gradlew'
       publishJUnitResults: true
       testResultsFiles: '$(TESTS_XML_DIR)/**/TEST-*.xml'
-      tasks: 'connectedGeckoNightlyX86DebugAndroidTest'
+      tasks: 'connectedX86DebugAndroidTest'
     displayName: 'Run Tests'
 
   - bash: |

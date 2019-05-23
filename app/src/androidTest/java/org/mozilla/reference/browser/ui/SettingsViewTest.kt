@@ -79,9 +79,9 @@ class SettingsViewTest {
         }.openSettingsViewPrivacy {
             verifyPrivacyUpButton()
             verifyPrivacySettings()
-            verifyTrackingProtectionHeading()
-            verifyTPEnableInNormalBrowsing()
-            verifyTPEnableinPrivateBrowsing()
+//            verifyTrackingProtectionHeading()
+//            verifyTPEnableInNormalBrowsing()
+//            verifyTPEnableinPrivateBrowsing()
             verifyDataChoicesHeading()
             verifyUseTelemetryToggle()
             verifyUseTelemetryToggle()
