@@ -8,7 +8,6 @@ import android.os.Bundle
 import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.PreferenceFragmentCompat
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
-import mozilla.components.service.glean.Glean
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
@@ -44,7 +43,8 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
     private fun getChangeListenerForTelemetry(): OnPreferenceChangeListener {
         return OnPreferenceChangeListener { _, value ->
             val enabled = value as Boolean
-            Glean.setUploadEnabled(enabled)
+//            Glean.setUploadEnabled(enabled)
+            // TODO: Propegate settings to extension
             true
         }
     }
