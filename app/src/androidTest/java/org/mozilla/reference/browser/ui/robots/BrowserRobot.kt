@@ -24,6 +24,7 @@ class BrowserRobot {
     */
     fun verifyPageContent(expectedText: String) {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        mDevice.waitForIdle()
         val testContent = mDevice.findObject((UiSelector().textContains(expectedText)))
 
         testContent.waitForExists(waitingTime)

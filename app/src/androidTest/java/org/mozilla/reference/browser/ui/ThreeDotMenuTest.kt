@@ -141,6 +141,7 @@ class ThreeDotMenuTest {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openShare {
+            mDevice.waitForIdle()
             verifyContentPanel()
         }
     }
@@ -187,6 +188,7 @@ class ThreeDotMenuTest {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.reportIssue {
+            mDevice.waitForIdle()
             verifyIssueUrl()
         }
     }
