@@ -39,12 +39,14 @@ class FindInPagePanelRobot {
     fun verifyFindNextInPageResult(ratioCounter: String) {
         mDevice.waitForIdle()
         findInPageResult().check(matches(withText((ratioCounter))))
+        mDevice.waitForIdle()
         findInPageNextButton().click()
     }
 
     fun verifyFindPrevInPageResult(ratioCounter: String) {
         mDevice.waitForIdle()
         findInPageResult().check(matches(withText((ratioCounter))))
+        mDevice.waitForIdle()
         findInPagePrevButton().click()
     }
 
