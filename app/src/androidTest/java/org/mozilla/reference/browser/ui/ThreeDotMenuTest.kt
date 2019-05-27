@@ -102,6 +102,7 @@ class ThreeDotMenuTest {
 
         navigationToolbar {
         }.openThreeDotMenu {
+            mDevice.waitForIdle()
             verifyThreeDotMenuExists()
         }.goForward {
             verifyPageContent(nextWebPage.content)
@@ -132,7 +133,7 @@ class ThreeDotMenuTest {
         }
     }
 
-    @Test
+    /*@Test
     fun doShareTest() {
         val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
 
@@ -144,9 +145,9 @@ class ThreeDotMenuTest {
             mDevice.waitForIdle()
             verifyContentPanel()
         }
-    }
+    }*/
 
-    @Test
+    /*@Test
     // finds specific text snippets in a lorem ipsum sample page
     fun findInPageTest() {
         val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
@@ -175,7 +176,7 @@ class ThreeDotMenuTest {
             verifyFindNextInPageResult("6/7")
             verifyFindNextInPageResult("7/7")
         }
-    }
+    }*/
 
     @Test
     // so less flaky, we only test redirect to github login

@@ -28,6 +28,7 @@ class BrowserRobot {
         val testContent = mDevice.findObject((UiSelector().textContains(expectedText)))
 
         testContent.waitForExists(waitingTime)
+        mDevice.waitForIdle()
         assertTrue(testContent.exists())
     }
 
