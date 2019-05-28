@@ -124,6 +124,7 @@ jobs:
     displayName: 'Build search'
 
   - bash: |
+      printf "127.0.0.1\tanolysis.cliqz.com\n127.0.0.1\tstats.cliqz.com\n" >> /etc/hosts
       $ANDROID_HOME/tools/bin/sdkmanager "$(IMG_NAME)"
       $ANDROID_HOME/tools/bin/avdmanager create avd --device "$(DEVICE_TYPE)" --package "$(IMG_NAME)" --abi google_apis/x86 --name "$(DEVICE_NAME)"
       $ANDROID_HOME/emulator/emulator -avd $(DEVICE_NAME) &
