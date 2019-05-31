@@ -7,6 +7,8 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.ReactPackage
 import android.content.Context
+import com.cliqz.components.search.react.modules.TabsModule
+import com.cliqz.components.search.react.modules.URLBarModule
 
 
 class BridgePackage(val context: Context) : ReactPackage {
@@ -19,7 +21,9 @@ class BridgePackage(val context: Context) : ReactPackage {
     override fun createNativeModules(reactContext: ReactApplicationContext): MutableList<NativeModule> {
         return mutableListOf(
                 BridgeModule(reactContext),
-                BrowserActionsModule(reactContext, context)
+                BrowserActionsModule(reactContext, context),
+                URLBarModule(reactContext, context),
+                TabsModule(reactContext, context)
         )
     }
 }
