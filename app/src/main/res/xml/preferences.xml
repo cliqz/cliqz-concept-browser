@@ -36,6 +36,12 @@
             android:defaultValue="false"
             android:title="@string/preferences_remote_debugging" />
 
+        <androidx.preference.Preference
+            android:key="@string/pref_key_rn_debug"
+            android:title="@string/preferences_react_native_debugging"
+            android:visibility="gone"
+            />
+
     </PreferenceCategory>
 
     <PreferenceCategory
