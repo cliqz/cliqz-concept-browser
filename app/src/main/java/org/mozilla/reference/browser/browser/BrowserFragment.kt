@@ -19,6 +19,7 @@ import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.session.ThumbnailsFeature
+import mozilla.components.feature.session.SwipeRefreshFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.support.base.feature.BackHandler
@@ -48,6 +49,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private val pictureInPictureIntegration = ViewBoundFeatureWrapper<PictureInPictureIntegration>()
     private val thumbnailsFeature = ViewBoundFeatureWrapper<ThumbnailsFeature>()
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
+    private val swipeRefreshFeature = ViewBoundFeatureWrapper<SwipeRefreshFeature>()
 
     private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
         readerViewFeature,
@@ -133,6 +135,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             feature = PromptFeature(
                 fragment = this,
                 sessionManager = requireComponents.core.sessionManager,
+                sessionId = sessionId,
                 fragmentManager = requireFragmentManager(),
                 onNeedToRequestPermissions = { permissions ->
                     requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)
@@ -166,6 +169,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         findInPageIntegration.set(
             feature = FindInPageIntegration(
                 requireComponents.core.sessionManager,
+                sessionId,
                 findInPageBar as FindInPageView,
                 engineView),
             owner = this,
@@ -209,6 +213,16 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
                 view.toolbar,
                 view.readerViewBar,
                 view.readerViewAppearanceButton
+            ),
+            owner = this,
+            view = view
+        )
+
+        swipeRefreshFeature.set(
+            feature = SwipeRefreshFeature(
+                requireComponents.core.sessionManager,
+                requireComponents.useCases.sessionUseCases.reload,
+                view.swipeRefresh
             ),
             owner = this,
             view = view

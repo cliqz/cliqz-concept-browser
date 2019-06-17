@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit
  */
 object TestAssetHelper {
     @Suppress("MagicNumber")
+    val waitingTime: Long = TimeUnit.SECONDS.toMillis(15)
     val waitingTimeShort: Long = TimeUnit.SECONDS.toMillis(1)
-    val waitingTime: Long = TimeUnit.SECONDS.toMillis(10)
     data class TestAsset(val url: Uri, val content: String)
 
     /**

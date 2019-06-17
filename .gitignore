@@ -36,6 +36,9 @@ captures/
 *.iml
 .idea/
 
+# Vim swap files
+*.sw[op]
+
 # Keystore files
 *.jks
 
@@ -60,3 +63,10 @@ app/src/main/assets/cliqzSearch
 # Addons
 app/src/main/assets/addons
 
+# UI test artifacts 
+.firebase_token*
+results/
+test_artifacts/
+google-cloud-sdk/
+*.jar
+*.gz

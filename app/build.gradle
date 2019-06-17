@@ -55,6 +55,7 @@ android {
             applicationIdSuffix ".debug"
         }
         raptor releaseTemplate >> { // the ">>" concatenates the raptor-specific options with the template
+            applicationIdSuffix ".raptor"
             manifestPlaceholders.isRaptorEnabled = "true"
             matchingFallbacks = ['release']
         }
@@ -83,16 +84,22 @@ android {
                 abiFilter "armeabi-v7a"
             }
         }
+        aarch64 {
+            dimension "abi"
+            ndk {
+                abiFilter "arm64-v8a"
+            }
+        }
         x86 {
             dimension "abi"
             ndk {
                 abiFilter "x86"
             }
         }
-        aarch64 {
+        x86_64 {
             dimension "abi"
             ndk {
-                abiFilter "arm64-v8a"
+                abiFilter "x86_64"
             }
         }
     }
@@ -160,7 +167,9 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
         // Our x86 builds need a higher version code to avoid installing ARM builds on an x86 device
         // with ARM compatibility mode.
 
-        if (variant.flavorName.contains("x86")) {
+        if (variant.flavorName.contains("x86_64")) {
+            versionCode = versionCode + 3
+	} else if (variant.flavorName.contains("x86")) {
             versionCode = versionCode + 2
         } else if (variant.flavorName.contains("aarch64")) {
             versionCode = versionCode + 1
@@ -183,7 +192,12 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
             // Append to the task so the first thing it does is run our validation
             prebuildTask.doFirst {
                 if (!project.hasProperty('versionName')) {
-                    throw new RuntimeException("Release builds require the 'versionName' property, e.g.: './gradlew -PversionName=<...> assembleNightly'")
+                    throw new RuntimeException("Release builds require the 'versionName' property to be set.\n" +
+                            "If you're using an IDE, set your build variant to be a \"debug\" type.\n" +
+                            "If you're using the command-line, either build a debug variant instead ('./gradlew assembleDebug')\n" +
+                            "\tor continue building the release build and set the \"versionName\" property ('./gradlew -PversionName=<...> assembleNightly').")
+                    // TODO when Android Studio 3.5.0 is prevalent, we can set the "debug" build type as the default
+                    // https://issuetracker.google.com/issues/36988145#comment59
                 }
             }
         }
@@ -196,6 +210,8 @@ dependencies {
     implementation Deps.mozilla_concept_toolbar
     implementation Deps.mozilla_concept_storage
     implementation Deps.mozilla_concept_sync
+
+    implementation Deps.mozilla_browser_engine_gecko_nightly
 
     implementation Deps.mozilla_browser_awesomebar
     implementation Deps.mozilla_browser_domains
@@ -213,6 +229,7 @@ dependencies {
     implementation Deps.mozilla_feature_contextmenu
     implementation Deps.mozilla_feature_customtabs
     implementation Deps.mozilla_feature_findinpage
+    implementation Deps.mozilla_feature_media
     implementation Deps.mozilla_feature_sitepermissions
     implementation Deps.mozilla_feature_intent
     implementation Deps.mozilla_feature_search
@@ -236,11 +253,6 @@ dependencies {
     implementation Deps.mozilla_support_rustlog
     implementation Deps.mozilla_lib_crash
     implementation Deps.thirdparty_sentry
-
-    implementation Deps.mozilla_browser_engine_gecko_nightly
-    armImplementation Gecko.geckoview_nightly_arm
-    x86Implementation Gecko.geckoview_nightly_x86
-    aarch64Implementation Gecko.geckoview_nightly_aarch64
 
     implementation Deps.kotlin_stdlib
     implementation Deps.kotlin_coroutines
@@ -285,10 +297,13 @@ dependencies {
 // -------------------------------------------------------------------------------------------------
 task printBuildVariants {
     doLast {
-        def buildVariants = android.applicationVariants.collect { variant ->
-            variant.name
-        }
-        println "variants: " + groovy.json.JsonOutput.toJson(buildVariants)
+        def variantData = android.applicationVariants.collect { variant -> [
+            name: variant.name,
+            buildType: variant.buildType.name,
+            abi: variant.productFlavors.find { it.dimension == 'abi' }.name,
+            isSigned: variant.signingReady,
+        ]}
+        println "variants: " + groovy.json.JsonOutput.toJson(variantData)
     }
 }
 
