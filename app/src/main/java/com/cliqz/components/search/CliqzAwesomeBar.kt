@@ -11,7 +11,7 @@ class CliqzAwesomeBar @JvmOverloads constructor (
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), AwesomeBar  {
-    val search by lazy { context.components.cliqzSearch }
+    val search by lazy { context.components.cliqz.search }
 
     init {
         if (search.view.parent != null) {
@@ -40,6 +40,7 @@ class CliqzAwesomeBar @JvmOverloads constructor (
     }
 
     override fun setOnStopListener(listener: () -> Unit) {
-        context.components.cliqzSearch.onClickListener = listener
+        context.components.cliqz.search.onClickListener = listener
+        context.components.cliqz.updateViewState()
     }
 }

@@ -67,7 +67,7 @@ open class BrowserActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        components.cliqzSearch.onResume(this)
+        components.cliqz.onResume(this)
     }
 
     /**

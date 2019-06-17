@@ -15,7 +15,7 @@ class URLBarModule(reactContext: ReactApplicationContext, val context: Context) 
 
     @ReactMethod
     fun isVisible(promise: Promise) {
-        val toolbar = context.components.cliqzSearch.toolbar
+        val toolbar = context.components.cliqz.toolbar
         if (toolbar != null) {
             promise.resolve(toolbar.visibility === View.VISIBLE)
         } else {
@@ -25,7 +25,7 @@ class URLBarModule(reactContext: ReactApplicationContext, val context: Context) 
 
     @ReactMethod
     fun focus(promise: Promise) {
-        val toolbar = context.components.cliqzSearch.toolbar
+        val toolbar = context.components.cliqz.toolbar
         if (toolbar != null) {
             reactApplicationContext.currentActivity?.runOnUiThread {
                 toolbar.visibility = View.VISIBLE
@@ -39,7 +39,7 @@ class URLBarModule(reactContext: ReactApplicationContext, val context: Context) 
 
     @ReactMethod
     fun show(promise: Promise) {
-        val toolbar = context.components.cliqzSearch.toolbar
+        val toolbar = context.components.cliqz.toolbar
         if (toolbar != null) {
             reactApplicationContext.currentActivity?.runOnUiThread {
                 toolbar.visibility = View.VISIBLE
@@ -52,7 +52,7 @@ class URLBarModule(reactContext: ReactApplicationContext, val context: Context) 
 
     @ReactMethod
     fun hide(promise: Promise) {
-        val toolbar = context.components.cliqzSearch.toolbar
+        val toolbar = context.components.cliqz.toolbar
         if (toolbar != null) {
             reactApplicationContext.currentActivity?.runOnUiThread {
                 toolbar.visibility = View.GONE
@@ -65,7 +65,7 @@ class URLBarModule(reactContext: ReactApplicationContext, val context: Context) 
 
     @ReactMethod
     fun fillIn(text: String, promise: Promise) {
-        val toolbar = context.components.cliqzSearch.toolbar
+        val toolbar = context.components.cliqz.toolbar
         if (toolbar != null) {
             reactApplicationContext.currentActivity?.runOnUiThread {
                 toolbar.visibility = View.VISIBLE
