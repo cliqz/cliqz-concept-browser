@@ -105,8 +105,7 @@ private fun remoteDebuggingText() = Espresso.onView(ViewMatchers.withText("Remot
 private fun remoteDebuggingToggle() = Espresso.onView(ViewMatchers.withId(R.id.switchWidget))
 private fun mozillaHeading() = Espresso.onView(ViewMatchers.withText("Cliqz"))
 private fun aboutReferenceBrowserButton() = Espresso.onView(ViewMatchers.withText("About Cliqz Concept Browser"))
-private fun assertNavigateUpButton() = navigateUpButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+
 private fun assertNavigateUpButton() {
     mDevice.wait(Until.findObject(By.text("Navigate up")), TestAssetHelper.waitingTimeShort)
 }

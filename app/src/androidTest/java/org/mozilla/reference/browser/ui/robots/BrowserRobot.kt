@@ -29,7 +29,7 @@ class BrowserRobot {
         mDevice.wait(Until.findObject(By.res(expectedText)), TestAssetHelper.waitingTime)
     }
 
-    fun verifyUrl(redirectUrl: String) {
+    fun verifyFXAUrl() {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         val redirectUrl = "https://accounts.firefox.com"
 
