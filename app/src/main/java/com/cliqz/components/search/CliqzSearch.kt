@@ -34,4 +34,8 @@ class CliqzSearch(private val context: Context) {
         sender.putString("contextId", "mobile-cards")
         return sender
     }
+
+    fun showDevOptionsDialog() {
+        reactHost.reactInstanceManager.showDevOptionsDialog()
+    }
 }

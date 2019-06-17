@@ -12,15 +12,10 @@ import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.R.string.pref_key_firefox_account
+import org.mozilla.reference.browser.R.string.*
 import org.mozilla.reference.browser.ext.getPreferenceKey
-import org.mozilla.reference.browser.R.string.pref_key_sign_in
-import org.mozilla.reference.browser.R.string.pref_key_pair_sign_in
-import org.mozilla.reference.browser.R.string.pref_key_make_default_browser
-import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
-import org.mozilla.reference.browser.R.string.pref_key_about_page
-import org.mozilla.reference.browser.R.string.pref_key_privacy
 import org.mozilla.reference.browser.ext.requireComponents
 
 @Suppress("TooManyFunctions")
@@ -55,6 +50,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val firefoxAccountKey = context?.getPreferenceKey(pref_key_firefox_account)
         val makeDefaultBrowserKey = context?.getPreferenceKey(pref_key_make_default_browser)
         val remoteDebuggingKey = context?.getPreferenceKey(pref_key_remote_debugging)
+        val rnDebuggingKey = context?.getPreferenceKey(pref_key_rn_debug)
         val aboutPageKey = context?.getPreferenceKey(pref_key_about_page)
         val privacyKey = context?.getPreferenceKey(pref_key_privacy)
 
@@ -63,6 +59,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val preferenceFirefoxAccount = findPreference(firefoxAccountKey)
         val preferenceMakeDefaultBrowser = findPreference(makeDefaultBrowserKey)
         val preferenceRemoteDebugging = findPreference(remoteDebuggingKey)
+        val preferenceRNDebugging = findPreference(rnDebuggingKey)
         val preferenceAboutPage = findPreference(aboutPageKey)
         val preferencePrivacy = findPreference(privacyKey)
 
@@ -85,6 +82,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceRemoteDebugging.onPreferenceChangeListener = getChangeListenerForRemoteDebugging()
         preferenceAboutPage.onPreferenceClickListener = getAboutPageListener()
         preferencePrivacy.onPreferenceClickListener = getClickListenerForPrivacy()
+
+        if (BuildConfig.DEBUG) {
+            preferenceRNDebugging.isVisible = true
+            preferenceRNDebugging.onPreferenceClickListener = OnPreferenceClickListener {
+                activity?.finish()
+                requireComponents.cliqzSearch.showDevOptionsDialog()
+                true
+            }
+        }
     }
 
     private fun getClickListenerForMakeDefaultBrowser(): OnPreferenceClickListener {

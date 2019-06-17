@@ -33,6 +33,8 @@
     <!-- Preference enabling remote debugging -->
     <string name="preferences_remote_debugging">Remote debugging via USB</string>
 
+    <string name="preferences_react_native_debugging">React-native debugging</string>
+
     <!-- Preference for enabling tracking protection in normal mode -->
     <string name="preferences_tracking_protection_normal">Enable in Normal Browsing Mode</string>
 

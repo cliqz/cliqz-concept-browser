@@ -5,9 +5,10 @@ browser. _This is not a production ready product!_
 
 This project is based on Mozilla's [Reference Browser](https://github.com/mozilla-mobile/reference-browser/)
 project, with extra Cliqz technologies integrated, namely:
- * Quick search,
- * Cliqz prototype search engine results page,
+ * Quick search.
+ * Cliqz prototype search engine results page.
  * Anti-tracking, adblocker and other privacy tools.
+ * Support for visiting p2p websites over the `dat://` protocol.
 
 # Nightly Builds Directly
 
