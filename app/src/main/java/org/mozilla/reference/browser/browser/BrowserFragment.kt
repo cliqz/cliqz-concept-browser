@@ -220,7 +220,10 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         cliqzFeature.set(
                 feature = CliqzFeature(
                         requireComponents.cliqz,
-                        requireComponents.core.sessionManager
+                        requireComponents.core.sessionManager,
+                        toolbar,
+                        awesomeBar,
+                        freshTab
                 ),
                 owner = this,
                 view = view

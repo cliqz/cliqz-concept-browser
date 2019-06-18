@@ -14,7 +14,7 @@ import org.mozilla.reference.browser.ext.components
 /**
  * @author Sam Macbeth
  */
-class Cliqz(private val context: Context) : SessionManager.Observer, Session.Observer {
+class Cliqz(private val context: Context) {
 
     private val reactHost by lazy { ReactHost(context) }
     private val reactInstanceManager by lazy { reactHost.reactInstanceManager }
@@ -29,12 +29,6 @@ class Cliqz(private val context: Context) : SessionManager.Observer, Session.Obs
     enum class State { FRESHTAB, SEARCH, BROWSING }
 
     var toolbar: BrowserToolbar? = null
-
-    init {
-        context.components.core.sessionManager.register(this)
-        context.components.core.sessionManager.sessions.forEach { it.register(this) }
-        updateViewState()
-    }
 
     fun callAction(module: String, action: String, vararg args: Any) {
         return reactHost.callAction(module, action, *args)
@@ -52,67 +46,4 @@ class Cliqz(private val context: Context) : SessionManager.Observer, Session.Obs
         reactInstanceManager.showDevOptionsDialog()
     }
 
-    fun setComponentState(newState: State) {
-        when (newState) {
-            State.FRESHTAB -> freshTab.visibility = View.VISIBLE
-            State.SEARCH -> {
-                freshTab.visibility = View.GONE
-                search.view.visibility = View.VISIBLE
-            }
-            State.BROWSING -> {
-                freshTab.visibility = View.GONE
-                search.onClickListener?.invoke()
-                search.active = false
-            }
-        }
-    }
-
-    fun updateViewState() {
-        if (context.components.core.sessionManager.selectedSession == null || context.components.core.sessionManager.selectedSession?.url == "about:blank") {
-            if (search.active) {
-                setComponentState(State.SEARCH)
-            } else {
-                setComponentState(State.FRESHTAB)
-            }
-        } else {
-            setComponentState(State.BROWSING)
-        }
-    }
-
-    /**
-     * The selection has changed and the given session is now the selected session.
-     */
-    override fun onSessionSelected(session: Session) {
-        updateViewState()
-    }
-
-    /**
-     * The given session has been added.
-     */
-    override fun onSessionAdded(session: Session) {
-        updateViewState()
-        session.register(this)
-    }
-
-    /**
-     * Sessions have been restored via a snapshot. This callback is invoked at the end of the
-     * call to <code>read</code>, after every session in the snapshot was added, and
-     * appropriate session was selected.
-     */
-    override fun onSessionsRestored() {
-        updateViewState()
-        context.components.core.sessionManager.sessions.forEach { it.register(this) }
-    }
-
-    /**
-     * The given session has been removed.
-     */
-    override fun onSessionRemoved(session: Session) {
-        updateViewState()
-        session.unregister(this)
-    }
-
-    override fun onUrlChanged(session: Session, url: String) {
-        updateViewState()
-    }
 }

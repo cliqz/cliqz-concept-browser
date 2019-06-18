@@ -69,8 +69,8 @@ class URLBarModule(reactContext: ReactApplicationContext, val context: Context) 
         if (toolbar != null) {
             reactApplicationContext.currentActivity?.runOnUiThread {
                 toolbar.visibility = View.VISIBLE
+                toolbar.url = text
                 toolbar.editMode()
-                toolbar.setSearchTerms(text)
             }
             promise.resolve(true)
         } else {

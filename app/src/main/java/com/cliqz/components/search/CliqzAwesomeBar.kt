@@ -41,6 +41,5 @@ class CliqzAwesomeBar @JvmOverloads constructor (
 
     override fun setOnStopListener(listener: () -> Unit) {
         context.components.cliqz.search.onClickListener = listener
-        context.components.cliqz.updateViewState()
     }
 }

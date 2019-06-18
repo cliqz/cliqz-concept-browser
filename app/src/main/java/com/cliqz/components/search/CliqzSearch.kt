@@ -12,7 +12,6 @@ import org.mozilla.reference.browser.R
 
 class CliqzSearch(private val context: Context, private val cliqz: Cliqz, private val reactInstanceManager: ReactInstanceManager) {
     internal var onClickListener: (() -> Unit)? = null
-    var active = false
     val view by lazy {
         val view = ReactRootView(context)
         view.startReactApplication(reactInstanceManager, "BrowserCoreApp", null)
@@ -21,10 +20,6 @@ class CliqzSearch(private val context: Context, private val cliqz: Cliqz, privat
 
     fun startSearch(query : String) {
         cliqz.callAction("search", "startSearch", query, WritableNativeMap(), getSearchSenderArgument())
-        if (!active) {
-            active = true
-            cliqz.updateViewState()
-        }
     }
 
     private fun getSearchSenderArgument() : WritableMap {

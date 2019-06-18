@@ -35,7 +35,8 @@ class BrowserActionsModule(reactContext: ReactApplicationContext, val context: C
     fun openLink(url: String, query: String) {
         reactApplicationContext.currentActivity?.runOnUiThread {
             context.components.useCases.sessionUseCases.loadUrl.invoke(url)
-            context.components.cliqz.setComponentState(Cliqz.State.BROWSING)
+            context.components.cliqz.search.onClickListener?.invoke()
+            context.components.core.sessionManager.selectedSession?.searchTerms = query
         }
     }
 
