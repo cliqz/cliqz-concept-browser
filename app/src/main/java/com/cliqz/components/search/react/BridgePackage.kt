@@ -1,14 +1,11 @@
 package com.cliqz.components.search.react
 
-import com.cliqz.components.search.react.modules.BridgeModule
-import com.cliqz.components.search.react.modules.BrowserActionsModule
 import com.cliqz.components.search.react.viewmanagers.NativeDrawableManager
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.ReactPackage
 import android.content.Context
-import com.cliqz.components.search.react.modules.TabsModule
-import com.cliqz.components.search.react.modules.URLBarModule
+import com.cliqz.components.search.react.modules.*
 
 
 class BridgePackage(val context: Context) : ReactPackage {
@@ -23,7 +20,8 @@ class BridgePackage(val context: Context) : ReactPackage {
                 BridgeModule(reactContext),
                 BrowserActionsModule(reactContext, context),
                 URLBarModule(reactContext, context),
-                TabsModule(reactContext, context)
+                TabsModule(reactContext, context),
+                SearchEnginesModule(reactContext, context)
         )
     }
 }
