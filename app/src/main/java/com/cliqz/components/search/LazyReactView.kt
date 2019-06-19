@@ -1,8 +1,10 @@
 package com.cliqz.components.search
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
+import android.view.View
 import android.widget.FrameLayout
 import com.facebook.react.ReactRootView
 
@@ -28,11 +30,11 @@ abstract class LazyReactView  @JvmOverloads constructor (
         viewIsLoaded = true
     }
 
-    override fun onVisibilityAggregated(isVisible: Boolean) {
-        if (!viewIsLoaded && isVisible) {
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        if (!viewIsLoaded && visibility == View.VISIBLE) {
             loadView()
         }
-        super.onVisibilityAggregated(isVisible)
+        super.onVisibilityChanged(changedView, visibility)
     }
 
     fun onDestroy() {
