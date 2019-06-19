@@ -21,8 +21,7 @@
         android:id="@+id/freshTab"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        mozac:awesomeBarChipBackgroundColor="#444444" />
+        android:visibility="gone" />
 
     <com.cliqz.components.search.CliqzAwesomeBar
         android:id="@+id/awesomeBar"
