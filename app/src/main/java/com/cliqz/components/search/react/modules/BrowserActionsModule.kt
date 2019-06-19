@@ -36,8 +36,9 @@ class BrowserActionsModule(reactContext: ReactApplicationContext, val context: C
         reactApplicationContext.currentActivity?.runOnUiThread {
             context.components.useCases.sessionUseCases.loadUrl.invoke(url)
             context.components.cliqz.search.onClickListener?.invoke()
-            context.components.core.sessionManager.selectedSession?.searchTerms = query
-            context.components.core.sessionManager.selectedSession?.searchTerms = ""
+            if (query != "") {
+                context.components.cliqz.search.dropdownSearchClick(query, url)
+            }
         }
     }
 

@@ -25,8 +25,7 @@ class CliqzFeature(
     var urlBarActive = toolbar.isFocused || toolbar.isInEditMode
     var currentURL : String? = null
         get() = sessionManager.selectedSession?.url
-
-    val lastSearch = mutableMapOf<String, Pair<String, String>>()
+    private val sessionSearchTerms = mutableMapOf<String, String>()
 
     init {
         toolbar.setOnEditFocusChangeListener { it ->
@@ -46,12 +45,15 @@ class CliqzFeature(
             return true
         }
         val session = sessionManager.selectedSession!!
-        if (!urlBarActive && session.id in lastSearch && lastSearch[session.id]!!.second == session.url) {
-            toolbar.url = lastSearch[session.id]!!.first
+        val lastSearch = cliqz.search.lastSearch
+        // check if the last search for this session matches the landing url from the search
+        if (session.id in lastSearch && lastSearch[session.id]!!.url == session.url) {
+            session.searchTerms = lastSearch[session.id]!!.query
             toolbar.editMode()
-            lastSearch.remove(session.id)
+            cliqz.search.clearLastSearch(session)
             return true
         }
+        // session is finished, remove it (which triggers freshtab)
         if (!session.canGoBack) {
             sessionManager.remove(session)
             return true
@@ -120,6 +122,7 @@ class CliqzFeature(
     override fun onSessionRemoved(session: Session) {
         updateState()
         session.unregister(this)
+        sessionSearchTerms.remove(session.id)
     }
 
     override fun onUrlChanged(session: Session, url: String) {
@@ -129,9 +132,4 @@ class CliqzFeature(
         updateState()
     }
 
-    override fun onSearch(session: Session, searchTerms: String) {
-        if (searchTerms != "") {
-            lastSearch[session.id] = Pair(searchTerms, session.url)
-        }
-    }
 }
