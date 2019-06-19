@@ -26,6 +26,8 @@ class CliqzFeature(
     var currentURL : String? = null
         get() = sessionManager.selectedSession?.url
 
+    val lastSearch = mutableMapOf<String, Pair<String, String>>()
+
     init {
         toolbar.setOnEditFocusChangeListener { it ->
             urlBarActive = it || toolbar.isInEditMode
@@ -43,8 +45,15 @@ class CliqzFeature(
         if (sessionManager.selectedSession == null ) {
             return true
         }
-        if (sessionManager.selectedSession?.canGoBack == false) {
-            sessionManager.remove(sessionManager.selectedSession!!)
+        val session = sessionManager.selectedSession!!
+        if (!urlBarActive && session.id in lastSearch && lastSearch[session.id]!!.second == session.url) {
+            toolbar.url = lastSearch[session.id]!!.first
+            toolbar.editMode()
+            lastSearch.remove(session.id)
+            return true
+        }
+        if (!session.canGoBack) {
+            sessionManager.remove(session)
             return true
         }
         return false
@@ -120,4 +129,9 @@ class CliqzFeature(
         updateState()
     }
 
+    override fun onSearch(session: Session, searchTerms: String) {
+        if (searchTerms != "") {
+            lastSearch[session.id] = Pair(searchTerms, session.url)
+        }
+    }
 }
