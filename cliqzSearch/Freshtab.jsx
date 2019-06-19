@@ -2,8 +2,8 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  Text,
-  Button,
+  Image,
+  TouchableHighlight,
   NativeModules,
 } from 'react-native';
 
@@ -25,15 +25,13 @@ export default class Freshtab extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>This is FreshTab</Text>
-        <Button
-          onPress={() => { BrowserActions.openLink('https://cliqz.com', '')}}
-          title="This is a freshtab link"
-        />
-        <Button
-          title="Start Search"
-          onPress={() => { URLBar.fillIn('') }}
-        />
+        <TouchableHighlight onPress={() => URLBar.fillIn('')}>
+          <Image
+            source={require('./ic_launcher_round.png')}
+            style={{ alignSelf: "center" }}
+            on
+            />
+        </TouchableHighlight>
       </View>
     )
   }
