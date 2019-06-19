@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "start": "react-native start --reset-cache",
-    "build": "mkdir -p build && react-native bundle --platform android --entry-file index.js --dev=true --bundle-output build/index.android.bundle",
-    "build:prod": "mkdir -p build && react-native bundle --platform android --entry-file index.js --dev=false --bundle-output build/index.android.bundle"
+    "build": "mkdir -p build && react-native bundle --platform android --entry-file index.js --dev=true --bundle-output build/index.android.bundle --assets-dest ../app/src/main/res/",
+    "build:prod": "mkdir -p build && react-native bundle --platform android --entry-file index.js --dev=false --bundle-output build/index.android.bundle --assets-dest ../app/src/main/res/"
   },
   "devDependencies": {
     "react-native-fs": "^2.13.3"
