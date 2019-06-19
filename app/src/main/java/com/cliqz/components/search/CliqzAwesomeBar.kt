@@ -10,21 +10,9 @@ class CliqzAwesomeBar @JvmOverloads constructor (
         context: Context,
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), AwesomeBar  {
+) : LazyReactView(context, attrs, defStyleAttr), AwesomeBar  {
     val search by lazy { context.components.cliqz.search }
-
-    init {
-        if (search.view.parent != null) {
-            val parentView = search.view.parent as FrameLayout
-            parentView.removeView(search.view)
-        }
-
-        addView(search.view)
-    }
-
-    fun onDestroy() {
-        removeView(search.view)
-    }
+    override val reactView by lazy { search.view }
 
     override fun addProviders(vararg providers: AwesomeBar.SuggestionProvider) {
     }
