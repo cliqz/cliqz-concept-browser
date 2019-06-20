@@ -4,6 +4,7 @@ import com.facebook.react.bridge.*
 import com.facebook.react.bridge.ReactMethod
 import android.content.Context
 import android.os.Bundle
+import com.cliqz.components.search.Cliqz
 import org.mozilla.reference.browser.ext.components
 
 class BrowserActionsModule(reactContext: ReactApplicationContext, val context: Context) : ReactContextBaseJavaModule(reactContext) {
@@ -34,7 +35,10 @@ class BrowserActionsModule(reactContext: ReactApplicationContext, val context: C
     fun openLink(url: String, query: String) {
         reactApplicationContext.currentActivity?.runOnUiThread {
             context.components.useCases.sessionUseCases.loadUrl.invoke(url)
-            context.components.cliqzSearch.onClickListener?.invoke()
+            context.components.cliqz.search.onClickListener?.invoke()
+            if (query != "") {
+                context.components.cliqz.search.dropdownSearchClick(query, url)
+            }
         }
     }
 

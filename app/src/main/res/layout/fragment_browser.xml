@@ -17,6 +17,12 @@
         android:layout_height="match_parent"
         app:layout_behavior="mozilla.components.feature.session.behavior.EngineViewBottomBehavior" />
 
+    <com.cliqz.components.search.FreshTab
+        android:id="@+id/freshTab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <com.cliqz.components.search.CliqzAwesomeBar
         android:id="@+id/awesomeBar"
         android:layout_width="match_parent"
