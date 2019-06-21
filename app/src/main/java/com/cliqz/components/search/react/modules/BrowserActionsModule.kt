@@ -5,7 +5,9 @@ import com.facebook.react.bridge.ReactMethod
 import android.content.Context
 import android.os.Bundle
 import com.cliqz.components.search.Cliqz
+import mozilla.components.support.utils.DomainMatch
 import org.mozilla.reference.browser.ext.components
+import java.net.URL
 
 class BrowserActionsModule(reactContext: ReactApplicationContext, val context: Context) : ReactContextBaseJavaModule(reactContext) {
     override fun getName(): String {
@@ -30,6 +32,23 @@ class BrowserActionsModule(reactContext: ReactApplicationContext, val context: C
         }
     }
 
+    @ReactMethod
+    fun topDomains(callback: Callback) {
+        val domains = mutableSetOf<String>()
+        val results = context.components.core.historyStorage.getSuggestions("", 20)
+            .forEach { result ->
+                val url = URL(result.url)
+                if (!url.protocol.equals("https")) {
+                    return@forEach
+                }
+                var domain = url.host
+                domain = if (domain.startsWith("www.")) domain.substring(4) else domain
+                domain = if (domain.startsWith("m.")) domain.substring(2) else domain
+                domains.add(domain)
+            }
+
+        callback.invoke(Arguments.fromArray(domains.toTypedArray()))
+    }
 
     @ReactMethod
     fun openLink(url: String, query: String) {

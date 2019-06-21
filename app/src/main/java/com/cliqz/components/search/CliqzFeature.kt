@@ -74,6 +74,7 @@ class CliqzFeature(
         } else {
             var showFreshtab = currentURL == newTabURL || currentURL == null
             if (showFreshtab) {
+                cliqz.sendEvent("NEW_TAB:SHOW")
                 toolbar.url = ""
             }
             updateVisibility(freshTab, showFreshtab)
