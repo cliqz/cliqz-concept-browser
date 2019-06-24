@@ -28,6 +28,7 @@ class CliqzFeature(
     private val sessionSearchTerms = mutableMapOf<String, String>()
 
     init {
+        cliqz.toolbar = toolbar
         toolbar.setOnEditFocusChangeListener { it ->
             urlBarActive = it || toolbar.isInEditMode
             updateState()
@@ -74,6 +75,7 @@ class CliqzFeature(
         } else {
             var showFreshtab = currentURL == newTabURL || currentURL == null
             if (showFreshtab) {
+                cliqz.sendEvent("NEW_TAB:SHOW")
                 toolbar.url = ""
             }
             updateVisibility(freshTab, showFreshtab)

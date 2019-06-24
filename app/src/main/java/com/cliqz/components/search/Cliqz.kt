@@ -34,12 +34,14 @@ class Cliqz(private val context: Context) {
         return reactHost.callAction(module, action, *args)
     }
 
+    fun sendEvent(eventName: String) {
+        return reactHost.sendEvent(eventName)
+    }
+
     fun onResume(activity: Activity) {
         reactInstanceManager.onHostResume(activity);
         val reactContext = reactInstanceManager.getCurrentReactContext()
         reactContext?.onHostResume(activity)
-
-        toolbar = activity.findViewById(R.id.toolbar)
     }
 
     fun showDevOptionsDialog() {
