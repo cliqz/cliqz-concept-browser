@@ -7,6 +7,8 @@ import android.os.Bundle
 import com.cliqz.components.search.Cliqz
 import mozilla.components.support.utils.DomainMatch
 import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.ext.replace
+import java.net.MalformedURLException
 import java.net.URL
 
 class BrowserActionsModule(reactContext: ReactApplicationContext, val context: Context) : ReactContextBaseJavaModule(reactContext) {
@@ -35,16 +37,20 @@ class BrowserActionsModule(reactContext: ReactApplicationContext, val context: C
     @ReactMethod
     fun topDomains(callback: Callback) {
         val domains = mutableSetOf<String>()
-        val results = context.components.core.historyStorage.getSuggestions("", 20)
+        context.components.core.historyStorage.getSuggestions("", 20)
             .forEach { result ->
-                val url = URL(result.url)
-                if (!url.protocol.equals("https")) {
+                try {
+                    val url = URL(result.url)
+                    if (url.protocol != "https") {
+                        return@forEach
+                    }
+                    var domain = url.host
+                    domain = if (domain.startsWith("www.")) domain.substring(4) else domain
+                    domain = if (domain.startsWith("m.")) domain.substring(2) else domain
+                    domains.add(domain)
+                } catch (e : MalformedURLException) {
                     return@forEach
                 }
-                var domain = url.host
-                domain = if (domain.startsWith("www.")) domain.substring(4) else domain
-                domain = if (domain.startsWith("m.")) domain.substring(2) else domain
-                domains.add(domain)
             }
 
         callback.invoke(Arguments.fromArray(domains.toTypedArray()))
