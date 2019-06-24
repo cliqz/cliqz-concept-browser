@@ -42,8 +42,6 @@ class Cliqz(private val context: Context) {
         reactInstanceManager.onHostResume(activity);
         val reactContext = reactInstanceManager.getCurrentReactContext()
         reactContext?.onHostResume(activity)
-
-        toolbar = activity.findViewById(R.id.toolbar)
     }
 
     fun showDevOptionsDialog() {

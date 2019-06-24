@@ -28,6 +28,7 @@ class CliqzFeature(
     private val sessionSearchTerms = mutableMapOf<String, String>()
 
     init {
+        cliqz.toolbar = toolbar
         toolbar.setOnEditFocusChangeListener { it ->
             urlBarActive = it || toolbar.isInEditMode
             updateState()
