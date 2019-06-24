@@ -45,7 +45,11 @@ const convertLogoUrl = url => url
 
 const LogoWithText = ({ domain }) => {
   const url = `https://${domain}`;
-  const logo = getLogo(url);
+  const logo = getLogo(url) || {
+    color: '9077e3',
+    text: domain.substring(0, 2),
+    url: '',
+  };
   const logoUrl = convertLogoUrl(logo.url);
 
   return (
