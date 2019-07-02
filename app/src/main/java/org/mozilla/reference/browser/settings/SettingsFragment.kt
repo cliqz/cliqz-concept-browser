@@ -87,7 +87,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             preferenceRNDebugging.isVisible = true
             preferenceRNDebugging.onPreferenceClickListener = OnPreferenceClickListener {
                 activity?.finish()
-                requireComponents.cliqzSearch.showDevOptionsDialog()
+                requireComponents.cliqz.showDevOptionsDialog()
                 true
             }
         }

@@ -3,15 +3,16 @@
   "version": "0.0.0",
   "scripts": {
     "start": "react-native start --reset-cache",
-    "build": "mkdir -p build && react-native bundle --platform android --entry-file index.js --dev=true --bundle-output build/index.android.bundle",
-    "build:prod": "mkdir -p build && react-native bundle --platform android --entry-file index.js --dev=false --bundle-output build/index.android.bundle"
+    "build": "mkdir -p build && react-native bundle --platform android --entry-file index.js --dev=true --bundle-output build/index.android.bundle --assets-dest ../app/src/main/res/",
+    "build:prod": "mkdir -p build && react-native bundle --platform android --entry-file index.js --dev=false --bundle-output build/index.android.bundle --assets-dest ../app/src/main/res/"
   },
   "devDependencies": {
     "react-native-fs": "^2.13.3"
   },
   "dependencies": {
+    "@cliqz/component-ui-logo": "^0.2.1",
     "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/master/1.38.0.1b47.5defa9a.tgz",
-    "cliqz-logo-database": "^0.1.2",
+    "cliqz-logo-database": "^0.2.1",
     "moment": "^2.24.0",
     "react": "^16.6.3",
     "react-native": "^0.59.1",

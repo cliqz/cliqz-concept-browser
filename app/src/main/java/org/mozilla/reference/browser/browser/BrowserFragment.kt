@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.cliqz.components.search.CliqzFeature
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
@@ -50,13 +51,15 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private val thumbnailsFeature = ViewBoundFeatureWrapper<ThumbnailsFeature>()
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
     private val swipeRefreshFeature = ViewBoundFeatureWrapper<SwipeRefreshFeature>()
+    private val cliqzFeature = ViewBoundFeatureWrapper<CliqzFeature>()
 
     private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
         readerViewFeature,
         fullScreenFeature,
         findInPageIntegration,
         toolbarIntegration,
-        sessionFeature,
+            cliqzFeature,
+                    sessionFeature,
         customTabsIntegration
     )
 
@@ -227,6 +230,19 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             owner = this,
             view = view
         )
+
+        cliqzFeature.set(
+                feature = CliqzFeature(
+                        requireComponents.cliqz,
+                        requireComponents.core.sessionManager,
+                        toolbar,
+                        awesomeBar,
+                        freshTab
+                ),
+                owner = this,
+                view = view
+        )
+
     }
 
     private fun showTabs() {

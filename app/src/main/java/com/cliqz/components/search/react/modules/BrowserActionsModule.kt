@@ -4,7 +4,12 @@ import com.facebook.react.bridge.*
 import com.facebook.react.bridge.ReactMethod
 import android.content.Context
 import android.os.Bundle
+import com.cliqz.components.search.Cliqz
+import mozilla.components.support.utils.DomainMatch
 import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.ext.replace
+import java.net.MalformedURLException
+import java.net.URL
 
 class BrowserActionsModule(reactContext: ReactApplicationContext, val context: Context) : ReactContextBaseJavaModule(reactContext) {
     override fun getName(): String {
@@ -29,12 +34,36 @@ class BrowserActionsModule(reactContext: ReactApplicationContext, val context: C
         }
     }
 
+    @ReactMethod
+    fun topDomains(callback: Callback) {
+        val domains = mutableSetOf<String>()
+        context.components.core.historyStorage.getSuggestions("", 20)
+            .forEach { result ->
+                try {
+                    val url = URL(result.url)
+                    if (url.protocol != "https") {
+                        return@forEach
+                    }
+                    var domain = url.host
+                    domain = if (domain.startsWith("www.")) domain.substring(4) else domain
+                    domain = if (domain.startsWith("m.")) domain.substring(2) else domain
+                    domains.add(domain)
+                } catch (e : MalformedURLException) {
+                    return@forEach
+                }
+            }
+
+        callback.invoke(Arguments.fromArray(domains.toTypedArray()))
+    }
 
     @ReactMethod
     fun openLink(url: String, query: String) {
         reactApplicationContext.currentActivity?.runOnUiThread {
             context.components.useCases.sessionUseCases.loadUrl.invoke(url)
-            context.components.cliqzSearch.onClickListener?.invoke()
+            context.components.cliqz.search.onClickListener?.invoke()
+            if (query != "") {
+                context.components.cliqz.search.dropdownSearchClick(query, url)
+            }
         }
     }
 

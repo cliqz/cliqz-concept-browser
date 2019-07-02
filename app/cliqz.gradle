@@ -1,7 +1,7 @@
 
 def addonsPath = 'src/main/assets/addons'
 def addons = [
-    'privacy@cliqz.com': 'https://s3.amazonaws.com/cdncliqz/update/edge/cliqz_privacy/master/12.38.0.47.5defa9a.zip',
+    'privacy@cliqz.com': 'https://s3.amazonaws.com/cdncliqz/update/edge/cliqz_privacy/master/latest.zip',
         'dat@cliqz.com': 'https://s3.amazonaws.com/cdncliqz/update/dat_protocol_pre/dat%40cliqz.com/dat_protocol-v0.0.8.zip'
 ]
 

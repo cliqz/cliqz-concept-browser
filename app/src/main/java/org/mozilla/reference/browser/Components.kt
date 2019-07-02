@@ -5,7 +5,7 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
-import com.cliqz.components.search.CliqzSearch
+import com.cliqz.components.search.Cliqz
 import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.Analytics
 import org.mozilla.reference.browser.components.BackgroundServices
@@ -28,7 +28,7 @@ class Components(private val context: Context) {
     val backgroundServices by lazy { BackgroundServices(context, core.historyStorage) }
 
     // Cliqz search is initialized eagerly; it has to be accessible in Settings activity
-    val cliqzSearch by lazy { CliqzSearch(context) }
+    val cliqz by lazy { Cliqz(context) }
 
     val analytics by lazy { Analytics(context) }
     val utils by lazy {

@@ -12,6 +12,7 @@ import SearchUIVertical from 'browser-core/build/modules/mobile-cards-vertical/S
 import App from 'browser-core/build/modules/core/app';
 import { Provider as CliqzProvider } from 'browser-core/build/modules/mobile-cards/cliqz';
 import { Provider as ThemeProvider } from 'browser-core/build/modules/mobile-cards-vertical/withTheme';
+import Freshtab from './Freshtab';
 
 const Bridge = NativeModules.Bridge;
 class Cliqz {
@@ -141,3 +142,4 @@ var styles = StyleSheet.create({
 });
 
 AppRegistry.registerComponent('BrowserCoreApp', () => BrowserCoreApp);
+AppRegistry.registerComponent('FreshTabApp', () => Freshtab);

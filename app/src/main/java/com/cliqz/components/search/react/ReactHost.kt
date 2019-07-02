@@ -45,6 +45,10 @@ internal class ReactHost(private val context: Context) : ReactInstanceManager.Re
         emit("action", eventBody)
     }
 
+    fun sendEvent(eventName: String) {
+        emit(eventName)
+    }
+
     private fun emit(eventName: String, arg: WritableMap) {
         if (isReady()) {
             reactContext?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit(eventName, arg)
@@ -55,6 +59,10 @@ internal class ReactHost(private val context: Context) : ReactInstanceManager.Re
         if (isReady()) {
             reactContext?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit(eventName, arg)
         }
+    }
+
+    private fun emit(eventName: String) {
+        emit(eventName, Arguments.createMap())
     }
 
     private fun isReady(): Boolean {
