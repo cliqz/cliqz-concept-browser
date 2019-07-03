@@ -40,7 +40,7 @@ class BrowserRobot {
 
     fun verifyGithubUrl() {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        val redirectUrl = "https://github.com/login"
+        val redirectUrl = "https://github.com/cliqz/cliqz-concept-browser/issues"
 
         mDevice.wait(Until.findObject(By.res("mozac_browser_toolbar_url_view")), waitingTime)
         onView(withId(R.id.mozac_browser_toolbar_url_view))
