@@ -14,10 +14,10 @@ private object Versions {
     const val workmanager = "2.0.0"
     const val google_material = "1.0.0"
 
-    const val android_gradle_plugin = "3.3.2"
+    const val android_gradle_plugin = "3.4.1"
     const val appservices_gradle_plugin = "0.4.4"
 
-    const val mozilla_android_components = "0.53.0-SNAPSHOT"
+    const val mozilla_android_components = "3.0.0-SNAPSHOT"
 
     const val thirdparty_sentry = "1.7.10"
 
@@ -60,6 +60,7 @@ object Deps {
     const val mozilla_feature_contextmenu = "org.mozilla.components:feature-contextmenu:${Versions.mozilla_android_components}"
     const val mozilla_feature_customtabs = "org.mozilla.components:feature-customtabs:${Versions.mozilla_android_components}"
     const val mozilla_feature_findinpage = "org.mozilla.components:feature-findinpage:${Versions.mozilla_android_components}"
+    const val mozilla_feature_media = "org.mozilla.components:feature-media:${Versions.mozilla_android_components}"
     const val mozilla_feature_sitepermissions = "org.mozilla.components:feature-sitepermissions:${Versions.mozilla_android_components}"
     const val mozilla_feature_intent = "org.mozilla.components:feature-intent:${Versions.mozilla_android_components}"
     const val mozilla_feature_search = "org.mozilla.components:feature-search:${Versions.mozilla_android_components}"

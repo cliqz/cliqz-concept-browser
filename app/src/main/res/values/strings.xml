@@ -146,5 +146,6 @@
     ]]></string>
 
     <string name="menu_share_with">Share with…</string>
+    <string name="toast_copied">Copied!</string>
 
 </resources>

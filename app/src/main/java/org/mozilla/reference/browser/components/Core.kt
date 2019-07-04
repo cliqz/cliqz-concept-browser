@@ -14,7 +14,9 @@ import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
+import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy.Companion.SAFE_BROWSING_ALL
 import mozilla.components.concept.fetch.Client
+import mozilla.components.feature.media.RecordingDevicesNotificationFeature
 import mozilla.components.feature.session.HistoryDelegate
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.EngineProvider
@@ -80,6 +82,10 @@ class Core(private val context: Context) {
 
             // Install the "icons" WebExtension to automatically load icons for every visited website.
             icons.install(engine, sessionManager = this)
+
+            // Show an ongoing notification when recording devices (camera, microphone) are used by web content
+            RecordingDevicesNotificationFeature(context, sessionManager = this)
+                .enable()
         }
     }
 
@@ -110,7 +116,6 @@ class Core(private val context: Context) {
         normalMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_normal), true),
         privateMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_private), true)
     ): TrackingProtectionPolicy {
-
         return TrackingProtectionPolicy.select(TrackingProtectionPolicy.ANALYTICS,
                 TrackingProtectionPolicy.CRYPTOMINING,
                 TrackingProtectionPolicy.FINGERPRINTING)

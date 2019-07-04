@@ -190,7 +190,7 @@ class ThreeDotMenuTest {
         }.openThreeDotMenu {
         }.reportIssue {
             mDevice.waitForIdle()
-            verifyIssueUrl()
+            verifyGithubUrl()
         }
     }
 
