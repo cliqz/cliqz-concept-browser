@@ -12,7 +12,10 @@ project, with extra Cliqz technologies integrated, namely:
 
 # Nightly Builds Directly
 
-_Coming soon_
+APKs:
+ * [Aarch64](https://github.com/cliqz/cliqz-concept-browser/releases/download/v0.1-alpha.1/app-aarch64-nightly-signed.apk)
+ * [Arm](https://github.com/cliqz/cliqz-concept-browser/releases/download/v0.1-alpha.1/app-arm-nightly-signed.apk)
+ * [x86](https://github.com/cliqz/cliqz-concept-browser/releases/download/v0.1-alpha.1/app-x86-nightly-signed.apk)
 
 # License
 
