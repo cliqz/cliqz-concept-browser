@@ -16,13 +16,8 @@ from lib.util import (
 )
 
 DEFAULT_EXPIRES_IN = '1 year'
-DEFAULT_APK_ARTIFACT_LOCATION = 'public/target.apk'
 _OFFICIAL_REPO_URL = 'https://github.com/mozilla-mobile/reference-browser'
 _DEFAULT_TASK_URL = 'https://queue.taskcluster.net/v1/task'
-
-_ARCH_APK_LOCATION_PATTERN = 'public/target.{}.apk'
-_SUPPORTED_ARCHITECTURES = ('aarch64', 'arm', 'x86', 'x86_64')
-_APKS_PATHS = [_ARCH_APK_LOCATION_PATTERN.format(arch) for arch in _SUPPORTED_ARCHITECTURES]
 
 class TaskBuilder(object):
     def __init__(
@@ -51,16 +46,8 @@ class TaskBuilder(object):
         self.date = arrow.get(date_string)
         self.trust_level = trust_level
 
-    def craft_assemble_nightly_task(self, version_name, is_staging=False):
-        artifacts = {
-            _ARCH_APK_LOCATION_PATTERN.format(arch): {
-                "type": 'file',
-                "path": "/build/reference-browser/app/build/outputs/apk/{}/nightly/"
-                        "app-{}-nightly-unsigned.apk".format(arch, arch),
-                "expires": taskcluster.stringDate(taskcluster.fromNow(DEFAULT_EXPIRES_IN)),
-            }
-            for arch in _SUPPORTED_ARCHITECTURES
-        }
+    def craft_assemble_nightly_task(self, variant, version_name, is_staging):
+        artifacts = _craft_artifacts_from_variant(variant)
 
         sentry_secret = '{}project/mobile/reference-browser/sentry'.format(
             'garbage/staging/' if is_staging else ''
@@ -89,8 +76,8 @@ class TaskBuilder(object):
         ]
 
         return self._craft_build_ish_task(
-            name='Build task',
-            description='Build Reference-Browser from source code',
+            name='assemble: {}'.format(variant.name),
+            description='Building and testing variant {}'.format(variant.name),
             command=command,
             scopes=[
                 "secrets:get:{}".format(sentry_secret)
@@ -109,15 +96,15 @@ class TaskBuilder(object):
 
     def craft_assemble_task(self, variant):
         return self._craft_clean_gradle_task(
-            name='assemble: {}'.format(variant.raw),
-            description='Building and testing variant {}'.format(variant.raw),
-            gradle_task='assemble{}'.format(variant.for_gradle_command),
+            name='assemble: {}'.format(variant.name),
+            description='Building variant {}'.format(variant.name),
+            gradle_task='assemble{}'.format(variant.build_type),
             artifacts=_craft_artifacts_from_variant(variant),
             treeherder={
                 'groupSymbol': variant.build_type,
                 'jobKind': 'build',
                 'machine': {
-                  'platform': variant.platform,
+                  'platform': 'android-all',
                 },
                 'symbol': 'A',
                 'tier': 1,
@@ -126,14 +113,14 @@ class TaskBuilder(object):
 
     def craft_test_task(self, variant):
         return self._craft_clean_gradle_task(
-            name='test: {}'.format(variant.raw),
-            description='Building and testing variant {}'.format(variant.raw),
-            gradle_task='test{}UnitTest'.format(variant.for_gradle_command),
+            name='test: {}'.format(variant.name),
+            description='Building and testing variant {}'.format(variant.name),
+            gradle_task='test{}UnitTest'.format(variant.build_type),
             treeherder={
                 'groupSymbol': variant.build_type,
                 'jobKind': 'test',
                 'machine': {
-                  'platform': variant.platform,
+                  'platform': 'android-all',
                 },
                 'symbol': 'T',
                 'tier': 1,
@@ -175,7 +162,7 @@ class TaskBuilder(object):
         return self._craft_clean_gradle_task(
             name='lint',
             description='Running ktlint over all modules',
-            gradle_task='lintAarch64Debug',
+            gradle_task='lintDebug',
             treeherder={
                 'jobKind': 'test',
                 'machine': {
@@ -235,6 +222,7 @@ class TaskBuilder(object):
         )
 
         test_commands = (
+            'automation/taskcluster/androidTest/ui-test.sh aarch64 -1',
             'automation/taskcluster/androidTest/ui-test.sh arm -1',
         )
 
@@ -364,34 +352,34 @@ class TaskBuilder(object):
     def craft_raptor_signing_task(self, assemble_task_id, variant, is_staging):
         staging_prefix = '.staging' if is_staging else ''
         routes = [
-            "index.project.mobile.reference-browser.v2{}.raptor.{}.{}.{}.latest.{}".format(
-                staging_prefix, self.date.year, self.date.month, self.date.day, variant.abi
+            "index.project.mobile.reference-browser.v3{}.raptor.{}.{}.{}.latest".format(
+                staging_prefix, self.date.year, self.date.month, self.date.day
             ),
-            "index.project.mobile.reference-browser.v2{}.raptor.{}.{}.{}.revision.{}.{}".format(
-                staging_prefix, self.date.year, self.date.month, self.date.day, self.commit, variant.abi
+            "index.project.mobile.reference-browser.v3{}.raptor.{}.{}.{}.revision.{}".format(
+                staging_prefix, self.date.year, self.date.month, self.date.day, self.commit
             ),
-            "index.project.mobile.reference-browser.v2{}.raptor.latest.{}".format(staging_prefix, variant.abi),
+            "index.project.mobile.reference-browser.v3{}.raptor.latest".format(staging_prefix),
         ]
 
         return self._craft_signing_task(
-            name='sign: {}'.format(variant.raw),
-            description='Dep-signing variant {}'.format(variant.raw),
+            name='sign: {}'.format(variant.name),
+            description='Dep-signing variant {}'.format(variant.name),
             signing_type='dep-signing',
             assemble_task_id=assemble_task_id,
-            apk_paths=[DEFAULT_APK_ARTIFACT_LOCATION],
+            apk_paths=variant.taskcluster_apk_paths,
             routes=routes,
             treeherder={
                 'groupSymbol': variant.build_type,
                 'jobKind': 'other',
                 'machine': {
-                    'platform': variant.platform,
+                    'platform': 'android-all',
                 },
                 'symbol': 'As',
                 'tier': 1,
             },
         )
 
-    def craft_nightly_signing_task(self, build_task_id, is_staging=True):
+    def craft_nightly_signing_task(self, build_task_id, variant, is_staging):
         index_release = 'staging.nightly' if is_staging else 'nightly'
         routes = [
             'index.project.mobile.reference-browser.v2.{}.{}.{}.{}.latest'.format(
@@ -408,7 +396,7 @@ class TaskBuilder(object):
             description='Sign nightly builds of reference-browser',
             signing_type='dep-signing' if is_staging else 'release-signing',
             assemble_task_id=build_task_id,
-            apk_paths=_APKS_PATHS,
+            apk_paths=['public/target.{}.apk'.format(apk.abi) for apk in variant.apks],
             routes=routes,
             treeherder={
                 'jobKind': 'other',
@@ -448,13 +436,13 @@ class TaskBuilder(object):
             treeherder=treeherder,
         )
 
-    def craft_push_task(self, signing_task_id, is_staging=True):
+    def craft_push_task(self, signing_task_id, variant, is_staging):
         payload = {
             "commit": True,
             "channel": 'nightly',
             "upstreamArtifacts": [
                 {
-                    "paths": _APKS_PATHS,
+                    "paths": variant.taskcluster_apk_paths,
                     "taskId": signing_task_id,
                     "taskType": "signing"
                 }
@@ -504,8 +492,9 @@ class TaskBuilder(object):
             dependencies=[assemble_task_id],
         )
 
-    def craft_raptor_speedometer_task(self, signing_task_id, mozharness_task_id, variant, gecko_revision, force_run_on_64_bit_device=False):
+    def craft_raptor_speedometer_task(self, abi, signing_task_id, mozharness_task_id, variant, gecko_revision, force_run_on_64_bit_device=False):
         return self._craft_raptor_task(
+            abi,
             signing_task_id,
             mozharness_task_id,
             variant,
@@ -517,8 +506,9 @@ class TaskBuilder(object):
             force_run_on_64_bit_device=force_run_on_64_bit_device,
         )
 
-    def craft_raptor_speedometer_power_task(self, signing_task_id, mozharness_task_id, variant, gecko_revision, force_run_on_64_bit_device=False):
+    def craft_raptor_speedometer_power_task(self, abi, signing_task_id, mozharness_task_id, variant, gecko_revision, force_run_on_64_bit_device=False):
         return self._craft_raptor_task(
+            abi,
             signing_task_id,
             mozharness_task_id,
             variant,
@@ -538,8 +528,9 @@ class TaskBuilder(object):
 
     def craft_raptor_tp6m_task(self, for_suite):
 
-        def craft_function(signing_task_id, mozharness_task_id, variant, gecko_revision, force_run_on_64_bit_device=False):
+        def craft_function(abi, signing_task_id, mozharness_task_id, variant, gecko_revision, force_run_on_64_bit_device=False):
             return self._craft_raptor_task(
+                abi,
                 signing_task_id,
                 mozharness_task_id,
                 variant,
@@ -554,6 +545,7 @@ class TaskBuilder(object):
 
     def _craft_raptor_task(
         self,
+        abi,
         signing_task_id,
         mozharness_task_id,
         variant,
@@ -567,26 +559,23 @@ class TaskBuilder(object):
         force_run_on_64_bit_device=False,
     ):
         extra_test_args = [] if extra_test_args is None else extra_test_args
-        apk_location = '{}/{}/artifacts/{}'.format(
-            _DEFAULT_TASK_URL, signing_task_id, DEFAULT_APK_ARTIFACT_LOCATION
+        apk_location = '{}/{}/artifacts/public/target.{}.apk'.format(
+            _DEFAULT_TASK_URL, signing_task_id, abi
         )
-        worker_type = 'gecko-t-bitbar-gw-perf-p2' if force_run_on_64_bit_device or variant.abi == 'aarch64' else 'gecko-t-bitbar-gw-perf-g5'
+        worker_type = 'gecko-t-bitbar-gw-perf-p2' if force_run_on_64_bit_device or abi == 'arm64-v8a' else 'gecko-t-bitbar-gw-perf-g5'
 
         if force_run_on_64_bit_device:
             treeherder_platform = 'android-hw-p2-8-0-arm7-api-16'
-        elif variant.abi == 'arm':
+        elif abi == 'armeabi-v7a':
             treeherder_platform = 'android-hw-g5-7-0-arm7-api-16'
-        elif variant.abi == 'aarch64':
-            treeherder_platform = 'android-hw-p2-8-0-aarch64'
+        elif abi == 'arm64-v8a':
+            treeherder_platform = 'android-hw-p2-8-0-android-aarch64'
         else:
-            raise ValueError('Unsupported architecture "{}"'.format(variant.abi))
+            raise ValueError('Unsupported architecture "{}"'.format(abi))
 
-        task_name = '{}: {} {}'.format(
-            name_prefix, variant.raw, '(on 64-bit-device)' if force_run_on_64_bit_device else ''
+        task_name = '{}: {} {} {}'.format(
+            name_prefix, variant.name, abi, '(on 64-bit-device)' if force_run_on_64_bit_device else ''
         )
-
-        apk_url = '{}/{}/artifacts/{}'.format(_DEFAULT_TASK_URL, signing_task_id,
-                                              DEFAULT_APK_ARTIFACT_LOCATION)
 
         return self._craft_default_task_definition(
             worker_type=worker_type,
@@ -619,8 +608,8 @@ class TaskBuilder(object):
                 ] + extra_test_args],
                 "env": {
                     "EXTRA_MOZHARNESS_CONFIG": json.dumps({
-                        "test_packages_url": "{}/{}/artifacts/public/build/target.test_packages.json".format(_DEFAULT_TASK_URL, mozharness_task_id),
-                        "installer_url": apk_url,
+                        "test_packages_url": "{}/{}/artifacts/public/build/en-US/target.test_packages.json".format(_DEFAULT_TASK_URL, mozharness_task_id),
+                        "installer_url": apk_location,
                     }),
                     "GECKO_HEAD_REPOSITORY": "https://hg.mozilla.org/mozilla-central",
                     "GECKO_HEAD_REV": gecko_revision,
@@ -630,7 +619,7 @@ class TaskBuilder(object):
                     "MOZ_NODE_PATH": "/usr/local/bin/node",
                     "MOZHARNESS_CONFIG": "raptor/android_hw_config.py",
                     "MOZHARNESS_SCRIPT": "raptor_script.py",
-                    "MOZHARNESS_URL": "{}/{}/artifacts/public/build/mozharness.zip".format(_DEFAULT_TASK_URL, mozharness_task_id),
+                    "MOZHARNESS_URL": "{}/{}/artifacts/public/build/en-US/mozharness.zip".format(_DEFAULT_TASK_URL, mozharness_task_id),
                     "MOZILLA_BUILD_URL": apk_location,
                     "NEED_XVFB": "false",
                     "NO_FAIL_ON_TEST_ERRORS": "1",
@@ -659,31 +648,12 @@ class TaskBuilder(object):
 
 def _craft_artifacts_from_variant(variant):
     return {
-        DEFAULT_APK_ARTIFACT_LOCATION: {
+        apk.taskcluster_path: {
             'type': 'file',
-            'path': variant.apk_absolute_path(),
+            'path': apk.absolute_path(variant.build_type),
             'expires': taskcluster.stringDate(taskcluster.fromNow(DEFAULT_EXPIRES_IN)),
-        },
+        } for apk in variant.apks
     }
-
-
-def get_architecture_and_build_type_from_variant(variant):
-    for supported_architecture in _SUPPORTED_ARCHITECTURES:
-        if variant.startswith(supported_architecture):
-            architecture = supported_architecture
-            break
-    else:
-        raise ValueError(
-            'Cannot identify architecture in "{}". '
-            'Expected to find one of these supported ones: {}'.format(
-                variant, _SUPPORTED_ARCHITECTURES
-            )
-        )
-
-    build_type = variant[len(architecture):]
-    build_type = lower_case_first_letter(build_type)
-
-    return architecture, build_type
 
 
 def schedule_task(queue, taskId, task):
@@ -713,11 +683,7 @@ def schedule_task_graph(ordered_groups_of_tasks):
     return full_task_graph
 
 
-def gecko_revision_for_version(geckoview_nightly_version):
-    nightly_build_id = geckoview_nightly_version.split('.')[-1]
-    nightly_date = arrow.get(nightly_build_id, 'YYYYMMDDHHmmss')
-
-    raptor_index = 'gecko.v2.mozilla-central.pushdate.{}.{:02}.{:02}.{}.firefox.linux64-debug'.format(
-        nightly_date.year, nightly_date.month, nightly_date.day, nightly_build_id
-    )
+def fetch_mozharness_task_id():
+    # We now want to use the latest available raptor
+    raptor_index = 'gecko.v2.mozilla-central.nightly.latest.mobile.android-x86_64-opt'
     return taskcluster.Index().findTask(raptor_index)['taskId']
