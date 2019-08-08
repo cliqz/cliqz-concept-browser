@@ -162,7 +162,7 @@ jobs:
       gradleWrapperFile: 'gradlew'
       publishJUnitResults: true
       testResultsFiles: '$(TESTS_XML_DIR)/**/TEST-*.xml'
-      tasks: 'connectedX86DebugAndroidTest'
+      tasks: 'connectedDebugAndroidTest'
     displayName: 'Run Tests'
 
   - bash: |
