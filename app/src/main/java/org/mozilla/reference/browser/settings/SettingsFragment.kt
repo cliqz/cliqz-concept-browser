@@ -109,7 +109,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForSignIn(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            requireComponents.services.accountsAuthFeature.beginAuthentication()
+            requireComponents.services.accountsAuthFeature.beginAuthentication(requireContext())
             activity?.finish()
             true
         }

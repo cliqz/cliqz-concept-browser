@@ -5,7 +5,6 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
-import android.os.Bundle
 import mozilla.components.browser.engine.gecko.GeckoEngine
 import mozilla.components.browser.engine.gecko.fetch.GeckoViewFetchClient
 import mozilla.components.concept.engine.DefaultSettings
@@ -18,7 +17,6 @@ import org.mozilla.reference.browser.ext.isCrashReportActive
 import java.io.File
 
 object EngineProvider {
-    var testConfig: Bundle? = null
 
     private var runtime: GeckoRuntime? = null
 
@@ -36,8 +34,6 @@ object EngineProvider {
             val builder = GeckoRuntimeSettings.Builder()
                     .configFilePath(configFile.absolutePath)
                     .autoplayDefault(GeckoRuntimeSettings.AUTOPLAY_DEFAULT_BLOCKED)
-
-            testConfig?.let { builder.extras(it) }
 
             if (isCrashReportActive) {
                 builder.crashHandler(CrashHandlerService::class.java)
