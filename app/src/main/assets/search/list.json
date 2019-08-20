@@ -1,9 +1,9 @@
 {
   "default": {
-    "searchDefault": "DuckDuckGo",
+    "searchDefault": "Cliqz",
     "searchOrder": [
-      "DuckDuckGo",
       "Cliqz",
+      "DuckDuckGo",
       "Bing"
     ],
     "visibleDefaultEngines": [
