@@ -123,6 +123,17 @@ class Core(private val context: Context) {
         normalMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_normal), true),
         privateMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_private), true)
     ): TrackingProtectionPolicy {
-        return TrackingProtectionPolicy.recommended()
+
+        val trackingPolicy = TrackingProtectionPolicy.recommended()
+        return when {
+            normalMode && privateMode -> trackingPolicy
+            normalMode && !privateMode -> trackingPolicy.forRegularSessionsOnly()
+            !normalMode && privateMode -> trackingPolicy.forPrivateSessionsOnly()
+            else -> TrackingProtectionPolicy.select(
+                    trackingCategories = arrayOf(TrackingProtectionPolicy.TrackingCategory.NONE),
+                    safeBrowsingCategories = arrayOf(TrackingProtectionPolicy.SafeBrowsingCategory.RECOMMENDED),
+                    cookiePolicy = TrackingProtectionPolicy.CookiePolicy.ACCEPT_ALL
+            )
+        }
     }
 }
