@@ -2,7 +2,7 @@
 def addonsPath = 'src/main/assets/addons'
 def addons = [
     'privacy@cliqz.com': 'https://s3.amazonaws.com/cdncliqz/update/edge/cliqz_privacy/master/latest.zip',
-        'dat@cliqz.com': 'https://s3.amazonaws.com/cdncliqz/update/dat_protocol_pre/dat%40cliqz.com/dat_protocol-0.0.12.zip'
+        'dat@cliqz.com': 'https://s3.amazonaws.com/cdncliqz/update/dat_protocol_pre/dat%40cliqz.com/dat_protocol-0.0.13.zip'
 ]
 
 task deleteOldAddons(type: Delete) {
