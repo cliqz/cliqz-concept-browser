@@ -8,8 +8,6 @@ kind.
 
 from __future__ import absolute_import, print_function, unicode_literals
 
-import datetime
-
 from taskgraph.transforms.base import TransformSequence
 
 from .gradle import get_build_variant
@@ -19,19 +17,18 @@ transforms = TransformSequence()
 
 
 @transforms.add
-def add_variant_config(config, tasks):
+def add_artifacts(config, tasks):
     for task in tasks:
-        variant = task["name"]
-        task.setdefault("attributes", {}).update({"build-type": variant})
-        task["treeherder"]["platform"] = "android/{}".format(variant)
-
+        variant = task["attributes"]["build-type"]
         variant_config = get_build_variant(variant)
         artifacts = task.setdefault("worker", {}).setdefault("artifacts", [])
         task["attributes"]["apks"] = apks = {}
         if "apk-artifact-template" in task:
             artifact_template = task.pop("apk-artifact-template")
             for apk in variant_config["apks"]:
-                apk_name = artifact_template["name"].format(variant=variant, **apk)
+                apk_name = artifact_template["name"].format(
+                    variant=variant, **apk
+                )
                 artifacts.append(
                     {
                         "type": artifact_template["type"],
@@ -43,15 +40,4 @@ def add_variant_config(config, tasks):
                 )
                 apks[apk["abi"]] = apk_name
 
-        yield task
-
-
-@transforms.add
-def add_nightly_version(config, tasks):
-    formatted_date = datetime.datetime.now().strftime("%y%V")
-    version_name = "1.0.{}".format(formatted_date)
-
-    for task in tasks:
-        if task.pop("include-nightly-version", False):
-            task["run"]["gradlew"].append("-PversionName={}".format(version_name))
         yield task

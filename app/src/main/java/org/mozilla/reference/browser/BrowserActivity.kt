@@ -13,10 +13,10 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.fragment.app.Fragment
 import mozilla.components.browser.session.Session
-import mozilla.components.browser.session.intent.EXTRA_SESSION_ID
 import mozilla.components.browser.tabstray.BrowserTabsTray
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.tabstray.TabsTray
+import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
 import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.utils.SafeIntent
@@ -47,7 +47,7 @@ open class BrowserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            supportFragmentManager?.beginTransaction()?.apply {
+            supportFragmentManager.beginTransaction().apply {
                 replace(R.id.container, createBrowserFragment(sessionId))
                 commit()
             }
@@ -113,7 +113,7 @@ open class BrowserActivity : AppCompatActivity() {
         super.onUserLeaveHint()
     }
 
-    override fun onCreateView(parent: View?, name: String?, context: Context, attrs: AttributeSet?): View? =
+    override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? =
         when (name) {
             EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
             TabsTray::class.java.name -> {

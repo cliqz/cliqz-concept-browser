@@ -5,19 +5,12 @@
 package org.mozilla.reference.browser
 
 import android.app.Application
-import android.content.Context
-import mozilla.components.service.glean.Glean
-import mozilla.components.service.glean.config.Configuration
-import mozilla.components.service.experiments.Experiments
-import mozilla.components.service.experiments.Configuration as ExperimentsConfiguration
-import mozilla.components.support.base.facts.register
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import mozilla.components.support.ktx.android.content.isMainProcess
 import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
 import mozilla.components.support.rustlog.RustLog
 import mozilla.components.support.rusthttp.RustHttpConfig
-import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
 open class BrowserApplication : Application() {
@@ -42,8 +35,8 @@ open class BrowserApplication : Application() {
         components.core.engine.warmUp()
 
         /*
-        setupGlean(this)
-        setupExperiments(this)
+        components.analytics.initializeGlean()
+        components.analytics.initializeExperiments()
         */
     }
 
@@ -63,21 +56,6 @@ private fun setupLogging() {
     // We want the log messages of all builds to go to Android logcat
     Log.addSink(AndroidLogSink())
     RustLog.enable()
-}
-
-private fun setupGlean(context: Context) {
-    /*
-    Glean.setUploadEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
-    Glean.initialize(context, Configuration(httpClient = lazy { context.components.core.client }))
-    GleanFactProcessor().register()
-    */
-}
-
-private fun setupExperiments(context: Context) {
-    Experiments.initialize(
-        context,
-        ExperimentsConfiguration(httpClient = lazy { context.components.core.client })
-    )
 }
 
 private fun setupCrashReporting(application: BrowserApplication) {
