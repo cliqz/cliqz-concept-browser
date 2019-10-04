@@ -42,9 +42,9 @@ open class BrowserApplication : Application() {
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        runOnlyInMainProcess {
-            components.core.sessionManager.onLowMemory()
-        }
+//        runOnlyInMainProcess {
+//            components.core.sessionManager.onLowMemory()
+//        }
     }
 
     companion object {
