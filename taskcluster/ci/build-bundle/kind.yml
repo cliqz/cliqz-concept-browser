@@ -5,8 +5,8 @@
 loader: taskgraph.loader.transform:loader
 
 transforms:
-    - rb_taskgraph.variant:transforms
-    - rb_taskgraph.build_aab:transforms
+    - rb_taskgraph.transforms.variant:transforms
+    - rb_taskgraph.transforms.build_aab:transforms
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 
@@ -35,12 +35,9 @@ jobs:
             nightly: true
         run-on-tasks-for: []
         include-nightly-version: true
+        include-shippable-secrets: true
         run:
             gradlew: ["-PcrashReportEnabled=true", "-Ptelemetry=true", "bundleNightly"]
-            secrets:
-                - path: .sentry_token
-                  key: dsn
-                  name: project/mobile/reference-browser/sentry
     debug:
         run-on-tasks-for: [github-push, github-pull-request]
         run:

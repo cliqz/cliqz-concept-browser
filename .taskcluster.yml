@@ -7,7 +7,7 @@ tasks:
     - $let:
           taskgraph:
               branch: taskgraph
-              revision: 0c5a68749f9a7672a7e56604b69a7bd41b036614
+              revision: 09d4c6dec78d17beb186eef1f79c1ab712ccc433
           trustDomain: mobile
       in:
           $if: 'tasks_for in ["github-pull-request", "github-push", "action", "cron"]'
@@ -78,12 +78,9 @@ tasks:
               in:
                   $let:
                       level:
-                          $if: 'tasks_for in ["github-push"] && repoUrl == "https://github.com/mozilla-mobile/reference-browser"'
+                          $if: 'tasks_for in ["github-push", "github-release", "action", "cron"] && repoUrl == "https://github.com/mozilla-mobile/reference-browser"'
                           then: '3'
-                          else:
-                              $if: 'tasks_for in ["cron", "action"]'
-                              then: '${repository.level}'
-                              else: 1
+                          else: '1'
                   in:
                       taskId: '${ownTaskId}'
                       taskGroupId:
@@ -112,8 +109,8 @@ tasks:
                                     else:
                                         name: "Decision Task for cron job ${cron.job_name}"
                                         description: 'Created by a [cron task](https://tools.taskcluster.net/tasks/${cron.task_id})'
-                      provisionerId: "aws-provisioner-v1"
-                      workerType: "mobile-${level}-decision"
+                      provisionerId: "mobile-${level}"
+                      workerType: "decision"
                       tags:
                           $if: 'tasks_for in ["github-push", "github-pull-request"]'
                           then:
@@ -189,6 +186,9 @@ tasks:
                                         ACTION_TASK_ID: {$json: {$eval: 'taskId'}}  # taskId of the target task (JSON-encoded)
                                         ACTION_INPUT: {$json: {$eval: 'input'}}
                                         ACTION_CALLBACK: '${action.cb_name}'
+                                  - $if: 'tasks_for == "github-release"'
+                                    then:
+                                        MOBILE_HEAD_TAG: '${event.release.tag_name}'
                           features:
                               taskclusterProxy: true
                               chainOfTrust: true

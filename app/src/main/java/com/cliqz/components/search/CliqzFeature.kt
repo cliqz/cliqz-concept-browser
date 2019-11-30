@@ -29,10 +29,10 @@ class CliqzFeature(
 
     init {
         cliqz.toolbar = toolbar
-        toolbar.setOnEditFocusChangeListener { it ->
-            urlBarActive = it || toolbar.isInEditMode
-            updateState()
-        }
+//        toolbar.setOnEditFocusChangeListener { it ->
+//            urlBarActive = it || toolbar.isInEditMode
+//            updateState()
+//        }
         sessionManager.register(this)
         sessionManager.sessions.forEach { addSession(it) }
         updateState()
