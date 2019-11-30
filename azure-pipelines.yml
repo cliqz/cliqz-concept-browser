@@ -82,16 +82,16 @@ jobs:
       options: '-PversionName=1.0.$(Build.BuildNumber)'
     displayName: 'Assemble Release'
 
-  - task: AndroidSigning@2
+  - task: AndroidSigning@3
     inputs:
       apkFiles: '$(BUILD_OUTPUT_DIR)/**/*.apk'
-      jarsign: true
-      jarsignerKeystoreFile: 'upload-keystore.jks'
-      jarsignerKeystorePassword: '$(keystore-password)'
-      jarsignerKeystoreAlias: 'upload'
-      jarsignerKeyPassword: '$(upload-key-password)'
-      zipalign: true
-      zipalignFile: '/Users/vsts/Library/Android/sdk/build-tools/28.0.3/zipalign'
+      apksign: true
+      apksignerKeystoreFile: 'upload-keystore.jks'
+      apksignerKeystorePassword: '$(keystore-password)'
+      apksignerKeystoreAlias: 'upload'
+      apksignerKeyPassword: '$(upload-key-password)'
+      zipalign: false
+      zipalignFile: /Users/runner/Library/Android/sdk/build-tools/28.0.3/zipalign
 
   - task: CopyFiles@2
     inputs:
