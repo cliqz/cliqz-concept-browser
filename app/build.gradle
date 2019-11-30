@@ -203,6 +203,7 @@ dependencies {
     implementation Deps.mozilla_browser_icons
 
     implementation Deps.mozilla_feature_accounts
+    implementation Deps.mozilla_feature_app_links
     implementation Deps.mozilla_feature_awesomebar
     implementation Deps.mozilla_feature_contextmenu
     implementation Deps.mozilla_feature_customtabs
@@ -220,6 +221,7 @@ dependencies {
     implementation Deps.mozilla_feature_qr
     implementation Deps.mozilla_feature_readerview
     implementation Deps.mozilla_feature_webcompat
+    implementation Deps.mozilla_feature_webnotifications
 
     implementation Deps.mozilla_ui_autocomplete
     implementation Deps.mozilla_ui_colors
@@ -275,18 +277,19 @@ dependencies {
 
 // -------------------------------------------------------------------------------------------------
 // Task for printing APK information for the requested variant
-// Usage: "./gradlew printVariant -PvariantBuildType=nightly"
+// Usage: ./gradlew printVariants
 // -------------------------------------------------------------------------------------------------
-task printVariant {
+task printVariants {
     doLast {
-        def rawVariant = android.applicationVariants.find { it.buildType.name == variantBuildType }
-        println "variant: " + groovy.json.JsonOutput.toJson([
-            name: rawVariant.name,
-            apks: rawVariant.variantData.outputScope.apkDatas.collect { [
+        def variants = android.applicationVariants.collect {[
+            apks: it.variantData.outputScope.apkDatas.collect {[
                 abi: it.filters.find { it.filterType == 'ABI' }.identifier,
-                fileName: it.outputFileName
-            ] }
-        ])
+                fileName: it.outputFileName,
+            ]},
+            build_type: it.buildType.name,
+            name: it.name,
+        ]}
+        println 'variants: ' + groovy.json.JsonOutput.toJson(variants)
     }
 }
 
