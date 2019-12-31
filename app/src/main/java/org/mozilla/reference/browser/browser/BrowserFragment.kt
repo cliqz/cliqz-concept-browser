@@ -83,6 +83,8 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 ),
                 owner = this,
                 view = view
+        )
+
         webExtToolbarFeature.set(
             feature = WebExtensionToolbarFeature(
                 view.toolbar,
