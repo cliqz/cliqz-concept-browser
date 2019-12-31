@@ -39,10 +39,10 @@ class SettingsViewTest {
             verifySyncQrSummary()
             verifyPrivacyButton()
             verifyPrivacySummary()
+            verifyOpenLinksInApps()
             verifyMakeDefaultBrowserButton()
             verifyDeveloperToolsHeading()
-            verifyRemoteDebuggingText()
-            verifyRemoteDebuggingToggle()
+            verifyRemoteDebugging()
             verifyMozillaHeading()
             verifyAboutReferenceBrowserButton()
         }

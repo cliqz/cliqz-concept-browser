@@ -16,6 +16,10 @@ import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import mozilla.components.concept.fetch.Client
+import mozilla.components.feature.addons.AddonManager
+import mozilla.components.feature.addons.amo.AddonCollectionProvider
+import mozilla.components.feature.addons.update.AddonUpdater
+import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.feature.downloads.DownloadsUseCases
 import mozilla.components.feature.media.MediaFeature
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
@@ -34,6 +38,8 @@ import java.util.concurrent.TimeUnit
 import org.mozilla.reference.browser.BuildConfig
 
 val addons = BuildConfig.ADDONS.split(',')
+
+private const val DAY_IN_MINUTES = 24 * 60L
 
 /**
  * Component group for all core browser functionality.
@@ -125,6 +131,20 @@ class Core(private val context: Context) {
      * Icons component for loading, caching and processing website icons.
      */
     val icons by lazy { BrowserIcons(context, client) }
+
+    // Addons
+    val addonManager by lazy {
+        val addonUpdater = DefaultAddonUpdater(context, AddonUpdater.Frequency(1, TimeUnit.DAYS))
+        AddonManager(store, engine, addonCollectionProvider, addonUpdater)
+    }
+
+    val addonCollectionProvider by lazy {
+        AddonCollectionProvider(
+            context = context,
+            client = client,
+            maxCacheAgeInMinutes = DAY_IN_MINUTES
+        )
+    }
 
     /**
      * Constructs a [TrackingProtectionPolicy] based on current preferences.

@@ -1,3 +1,4 @@
+
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -18,7 +19,7 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
 import mozilla.components.lib.crash.Crash
-import mozilla.components.support.base.feature.BackHandler
+import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.utils.SafeIntent
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
@@ -60,12 +61,12 @@ open class BrowserActivity : AppCompatActivity() {
             lifecycle.addObserver(crashIntegration)
         }
 
-//        DataReportingNotification.checkAndNotifyPolicy(this)
+        NotificationManager.checkAndNotifyPolicy(this)
     }
 
     override fun onBackPressed() {
         supportFragmentManager.fragments.forEach {
-            if (it is BackHandler && it.onBackPressed()) {
+            if (it is UserInteractionHandler && it.onBackPressed()) {
                 return
             }
         }
