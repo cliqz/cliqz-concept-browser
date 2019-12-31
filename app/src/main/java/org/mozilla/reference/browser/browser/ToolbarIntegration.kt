@@ -23,9 +23,10 @@ import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.feature.toolbar.ToolbarAutocompleteFeature
 import mozilla.components.feature.toolbar.ToolbarFeature
-import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.LifecycleAwareFeature
+import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.addons.AddonsActivity
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
@@ -39,7 +40,7 @@ class ToolbarIntegration(
     tabsUseCases: TabsUseCases,
     webAppUseCases: WebAppUseCases,
     sessionId: String? = null
-) : LifecycleAwareFeature, BackHandler {
+) : LifecycleAwareFeature, UserInteractionHandler {
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
         it.initialize(context)
     }
@@ -98,6 +99,12 @@ class ToolbarIntegration(
                 FindInPageIntegration.launch?.invoke()
             }.apply {
                 visible = { sessionManager.selectedSession != null }
+            },
+
+            SimpleBrowserMenuItem("Add-ons") {
+                val intent = Intent(context, AddonsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(intent)
             },
 
             SimpleBrowserMenuItem("Report issue") {
