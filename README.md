@@ -1,5 +1,7 @@
 #  Cliqz Concept Browser
 
+**This was an experiment for the next generation Cliqz browser. We are applying the lessons from this project in our new browser [here](https://github.com/cliqz/daisy)**. 
+
 This is a showcase experimental base for [Cliqz](https://cliqz.com/) technologies in a
 browser. _This is not a production ready product!_
 
